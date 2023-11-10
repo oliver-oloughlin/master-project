@@ -1,0 +1,27 @@
+:root {
+  --clr-primary: hsl(0 0% 20%);
+  --bg-primary: hsl(0 0% 100%);
+  --ff-primary: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  font-family: var(--ff-primary);
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: var(--clr-primary);
+  background-color: var(--bg-primary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: inherit;
+}
