@@ -12,10 +12,12 @@
   "dependencies": {
     "@aws-amplify/ui-react": "^5.3.2",
     "@tanstack/react-router": "^0.0.1-beta.209",
+    "@types/node": "^20.9.0",
     "amazon-cognito-identity-js": "^6.3.7",
     "aws-amplify": "^5.3.12",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

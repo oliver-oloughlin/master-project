@@ -8,6 +8,7 @@ import {
 // Import route components
 import Root from "./routes/root"
 import Index from "./routes/index"
+import Test from "./routes/test"
 
 // Create routes
 const rootRoute = new RootRoute({
@@ -20,8 +21,14 @@ const indexRoute = new Route({
   component: Index,
 })
 
+const testRoute = new Route({
+  path: "/test",
+  getParentRoute: () => rootRoute,
+  component: Test
+})
+
 // Create the route tree using routes
-const routeTree = rootRoute.addChildren([indexRoute])
+const routeTree = rootRoute.addChildren([indexRoute, testRoute])
 
 // Create the router using route tree
 const router = new Router({ routeTree })
