@@ -12,5 +12,19 @@ Amplify.configure({
 })
 
 export default function CognitoAuthenticator({ children }: { children?: React.ReactNode }) {
-  return <Authenticator hideSignUp>{children}</Authenticator>
+  return (
+    <Authenticator
+      hideSignUp
+      formFields={{
+        signIn: {
+          username: {
+            isReadOnly: true,
+            defaultValue: "olivol"
+          }
+        }
+      }}
+    >
+      {children}
+    </Authenticator>
+  )
 }
