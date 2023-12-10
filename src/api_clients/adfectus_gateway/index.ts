@@ -1,5 +1,5 @@
 import { client, resource } from "@oliver_nexro/zod_api"
-import { PostUserSchema } from "./models/User"
+import { UserSchema } from "./models/User"
 import { z } from "zod"
 
 export const adfectusGatewayApiClient = client({
@@ -10,9 +10,12 @@ export const adfectusGatewayApiClient = client({
     users: resource("/users", {
       actions: {
         post: {
-          bodySchema: PostUserSchema,
+          bodySchema: UserSchema,
           headersSchema: z.object({
             Authorization: z.string()
+          }),
+          searchParamsSchema: z.object({
+            vendor: z.enum(["adfectus"])
           })
         }
       }

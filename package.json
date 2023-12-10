@@ -18,7 +18,8 @@
     "aws-amplify": "^5.3.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",
