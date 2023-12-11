@@ -3,7 +3,7 @@ import { Amplify } from "aws-amplify"
 import "@aws-amplify/ui-react/styles.css"
 import { useEffect } from "react"
 import styles from "./styles/CognitoAuthenticator.module.css"
-import { useUsername } from "#/stores/username"
+import { useUsername } from "#/state/username"
 
 // Configure Amplify in index file or root file
 Amplify.configure({

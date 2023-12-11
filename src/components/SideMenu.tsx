@@ -1,15 +1,21 @@
-import { useGroups } from "#/stores/groups"
+import { useGroups } from "#/state/groups"
 import styles from "./styles/SideMenu.module.css"
-import SignOutButton from "#/components/CognitoSignOutButton"
+import UserButton from "#/components/CognitoUserButton"
 
 export default function SideMenu() {
-  const groups = useGroups(state => state.groups)
-
+  const groups = useGroups()
   return (
     <section className={styles["side-menu"]}>
-      <SignOutButton />
+      <UserButton />
       <nav className={styles["nav"]}>
-        {groups.map((group) => <span key={group.groupId}>{group.groupId}</span>)}
+        {groups.map((group) => (
+          <a 
+            key={group.groupId} 
+            href={`/groups/${group.groupId}`}
+          >
+            {group.groupId}
+          </a>
+        ))}
       </nav>
     </section>
   )

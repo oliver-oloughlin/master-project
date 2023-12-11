@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const UserSchema = z.object({
+export const PatientSchema = z.object({
   userId: z.string(),
   groupId: z.string(),
   instId: z.string(),
@@ -8,4 +8,4 @@ export const UserSchema = z.object({
   arrivalDate: z.string(),
 })
 
-export type User = z.infer<typeof UserSchema>
+export type Patient = z.infer<typeof PatientSchema>
