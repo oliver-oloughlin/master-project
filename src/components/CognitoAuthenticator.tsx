@@ -1,9 +1,7 @@
 import { Authenticator } from "@aws-amplify/ui-react"
 import { Amplify } from "aws-amplify"
 import "@aws-amplify/ui-react/styles.css"
-import { useEffect } from "react"
-import styles from "./styles/CognitoAuthenticator.module.css"
-import { useUsername } from "#/state/username"
+import { useUsername } from "#/stores/username"
 
 // Configure Amplify in index file or root file
 Amplify.configure({
@@ -15,17 +13,12 @@ Amplify.configure({
 })
 
 export default function CognitoAuthenticator({ children }: { children?: React.ReactNode }) {
-  const { username, fetchUsername } = useUsername(state => ({ username: state.username, fetchUsername: state.fetchUsername }))
-
-  useEffect(() => {
-    fetchUsername()
-  }, [fetchUsername])
-
+  const username = useUsername()
   return (
     <>
     {username && (
       <Authenticator
-        className={styles["authenticator"]}
+        className="grid place-items-center h-screen"
         hideSignUp
         formFields={{
           signIn: {
