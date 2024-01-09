@@ -6,6 +6,7 @@ export const PatientSchema = z.object({
   instId: z.string(),
   firstName: z.string(),
   arrivalDate: z.string(),
+  departureDate: z.string().optional()
 })
 
 export type Patient = z.infer<typeof PatientSchema>

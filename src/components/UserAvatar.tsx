@@ -6,7 +6,7 @@ import {
 import { useUsername } from "#/stores/username"
 
 export default function UserAvatar() {
-  const username = useUsername()
+  const { username } = useUsername()
   return (
     <Avatar>
       <AvatarImage />

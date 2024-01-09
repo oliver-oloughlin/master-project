@@ -1,30 +1,26 @@
-import { create } from "zustand"
-import type { Group } from "#/models/group"
-import { mockGroups } from "#/models/mocks/groups"
 import { useEffect } from "react"
+import { createLoaderStore } from "./_loader"
+import { mockGroups } from "#/models/mocks/groups"
+import type { Group } from "#/models/group"
 
-// State type
-type GroupsStoreState = {
-  groups: null | Group[]
-  fetchGroups(): void | Promise<void>
+// TODO: Replace with API request
+function fetcher() {
+  return new Promise<Group[]>(r => r(mockGroups))
 }
 
-// State store
-const useStore = create<GroupsStoreState>((set) => ({
-  groups: null,
-  fetchGroups() {
-    // Placeholder for API request
-    set({ groups: mockGroups })
-  }
-}))
+const useLoader = createLoaderStore(fetcher)
 
-// State hook
 export const useGroups = () => {
-  const { groups, fetchGroups } = useStore(state => state)
+  const { data, fetch, loading, error } = useLoader()
 
   useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
+    fetch()
+  }, [fetch])
 
-  return groups ?? []
+  return {
+    groups: data ?? [],
+    loading,
+    error,
+    fetch
+  }
 }

@@ -13,7 +13,7 @@ Amplify.configure({
 })
 
 export default function CognitoAuthenticator({ children }: { children?: React.ReactNode }) {
-  const username = useUsername()
+  const { username } = useUsername()
   return (
     <>
     {username && (
