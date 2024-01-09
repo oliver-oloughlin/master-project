@@ -145,21 +145,30 @@ export default function Patients() {
             <PaginationPrevious onPointerDown={() => setPage(p => Math.max(1, p - 1))} />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink className={page === 1 ? selectedPageClass : ""}>
-              {page === 1 ? page : page - 1}
+            <PaginationLink 
+              className={page === 1 ? selectedPageClass : ""}
+              onPointerDown={() => setPage(p =>  p === 1 ? p : p === maxPage ? p - 2 : p - 1)}
+            >
+              {page === 1 ? page : page === maxPage ? page - 2 : page - 1}
             </PaginationLink>
           </PaginationItem>
           {maxPage > 1 &&
             <PaginationItem>
-              <PaginationLink className={page !== 1 && (page !== maxPage && maxPage !== 2) ? selectedPageClass : ""}>
-                {page === 1 ? page + 1 : maxPage === 2 || page !== maxPage ? page : page - 1 }
+              <PaginationLink 
+                className={page !== 1 && (page !== maxPage && maxPage !== 2) ? selectedPageClass : ""}
+                onPointerDown={() => setPage(p => p === 1 ? p + 1 : maxPage === 2 || p !== maxPage ? p : p - 1)}
+              >
+                {page === 1 ? page + 1 : maxPage === 2 || page !== maxPage ? page : page - 1}
               </PaginationLink>
             </PaginationItem>
           }
           {maxPage > 2 &&
             <PaginationItem>
-              <PaginationLink className={page === maxPage ? selectedPageClass : ""}>
-                {page === maxPage ? page : page + 1}
+              <PaginationLink  
+                className={page === maxPage ? selectedPageClass : ""}
+                onPointerDown={() => setPage(p => p === 1 ? p + 2 : p === maxPage ? p : p + 1)}
+              >
+                {page === 1 ? page + 2 : page === maxPage ? page : page + 1}
               </PaginationLink>
             </PaginationItem>
           }
