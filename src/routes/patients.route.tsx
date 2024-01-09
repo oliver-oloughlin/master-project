@@ -9,8 +9,16 @@ import {
   TableCell 
 } from "#/components/ui/table"
 import { formatDisplayDate } from "#/utils/formatters"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "#/components/ui/pagination"
-import { useMemo, useState } from "react"
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationEllipsis, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "#/components/ui/pagination"
+import { FormEvent, useMemo, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { Input } from "#/components/ui/input"
 import { Button } from "#/components/ui/button"
@@ -25,9 +33,16 @@ export default function Patients() {
   const [page, setPage] = useState(1)
   const { patients, loading, error } = usePatients()
 
-  // Set new view & reset page
+  // View selector
   function selectView(view: PatientVisitState) {
     setView(view)
+    setPage(1)
+  }
+
+  // Search handler
+  function handleSearch(event: FormEvent<HTMLInputElement>) {
+    const value = (event.target as HTMLInputElement).value
+    setSearch(value)
     setPage(1)
   }
 
@@ -70,8 +85,9 @@ export default function Patients() {
   const start = PAGE_SIZE * (page - 1)
   const end = start + PAGE_SIZE
   const maxPage = Math.floor((sortedPatients.length - 1) / PAGE_SIZE) + 1
-
   const patientsPage = sortedPatients.slice(start, end)
+
+  const selectedPageClass = "border-slate-200 border-2"
 
   return (
     <section className="m-auto w-fit">
@@ -101,7 +117,7 @@ export default function Patients() {
       <Input
         type="search"
         placeholder="Søk etter pasient"
-        onInput={(e) => setSearch((e.target as HTMLInputElement).value)}
+        onInput={handleSearch}
       />
       <Table>
         <TableHeader>
@@ -128,26 +144,26 @@ export default function Patients() {
           <PaginationItem>
             <PaginationPrevious onPointerDown={() => setPage(p => Math.max(1, p - 1))} />
           </PaginationItem>
-          {page > 1 &&
-            <PaginationItem>
-              <PaginationLink onPointerDown={() => setPage(p => p - 1)}>
-                {page - 1}
-              </PaginationLink>
-            </PaginationItem>
-          }
           <PaginationItem>
-            <PaginationLink className="border-slate-200 border-2">
-              {page}
+            <PaginationLink className={page === 1 ? selectedPageClass : ""}>
+              {page === 1 ? page : page - 1}
             </PaginationLink>
           </PaginationItem>
-          {sortedPatients.length > PAGE_SIZE * page &&
+          {maxPage > 1 &&
             <PaginationItem>
-              <PaginationLink onPointerDown={() => setPage(p => p + 1)}>
-                {Math.min(sortedPatients.length, page + 1)}
+              <PaginationLink className={page !== 1 && (page !== maxPage && maxPage !== 2) ? selectedPageClass : ""}>
+                {page === 1 ? page + 1 : maxPage === 2 || page !== maxPage ? page : page - 1 }
               </PaginationLink>
             </PaginationItem>
           }
-          {sortedPatients.length > PAGE_SIZE * (page + 1) &&
+          {maxPage > 2 &&
+            <PaginationItem>
+              <PaginationLink className={page === maxPage ? selectedPageClass : ""}>
+                {page === maxPage ? page : page + 1}
+              </PaginationLink>
+            </PaginationItem>
+          }
+          {maxPage > 3 && page < maxPage - 1 &&
             <PaginationItem>
               <PaginationEllipsis />
             </PaginationItem>
