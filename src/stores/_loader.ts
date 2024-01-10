@@ -5,6 +5,7 @@ export type LoaderStore<T> = {
   loading: boolean
   error: unknown
   fetch(): Promise<void>
+  mutate(fn: (data: T) => T): void
 }
 
 export function createLoaderStore<const T>(fetcher: () => Promise<T>) {
@@ -20,6 +21,13 @@ export function createLoaderStore<const T>(fetcher: () => Promise<T>) {
       } catch (error) {
         set({ error })
       }
+    },
+    mutate(fn) {
+      if (!this.data) {
+        return
+      }
+      
+      set({ data: fn(this.data) })
     }
   }))
 }

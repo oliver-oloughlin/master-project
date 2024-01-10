@@ -7,3 +7,5 @@ export const UserSchema = z.object({
   firstname: z.string(),
   arrivalDate: z.string(),
 })
+
+export type User = z.infer<typeof UserSchema>

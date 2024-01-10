@@ -1,5 +1,10 @@
 import RouterProvider from "./Router"
+import Authenticator from "#/components/CognitoAuthenticator"
 
 export default function App() {
-  return <RouterProvider />
+  return (
+    <Authenticator>
+      <RouterProvider />
+    </Authenticator>
+  )
 }

@@ -18,7 +18,7 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "#/components/ui/pagination"
-import { FormEvent, useMemo, useState } from "react"
+import { FormEvent, Fragment, useMemo, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { Input } from "#/components/ui/input"
 import { Button } from "#/components/ui/button"
@@ -87,6 +87,12 @@ export default function Patients() {
   const end = start + PAGE_SIZE
   const maxPage = Math.floor((sortedPatients.length - 1) / PAGE_SIZE) + 1
   const patientsPage = sortedPatients.slice(start, end)
+  
+  const pageWindow = [
+    (Math.max(1, page === 1 ? 1 : page === maxPage ? page - 2 : page - 1)),
+    (page === 1 && maxPage > 1 ? page + 1 : maxPage > 2 && page === maxPage ? page - 1 : maxPage > 1 ? page : null),
+    (maxPage > 2 && page === maxPage ? page : maxPage > 2 && page !== 1 ? page + 1 : maxPage > 2 ? page + 2 : null)
+  ]
 
   const selectedPageClass = "border-slate-200 border-2"
 
@@ -131,8 +137,8 @@ export default function Patients() {
         </TableHeader>
         <TableBody>
           {patientsPage.map(patient => (
-            <TableRow key={patient.userId}>
-              <TableCell>{patient.userId}</TableCell>
+            <TableRow key={patient.patientId}>
+              <TableCell>{patient.patientId}</TableCell>
               <TableCell>{patient.firstName}</TableCell>
               <TableCell>{formatDisplayDate(patient.arrivalDate)}</TableCell>
               <TableCell>{patient.groupId}</TableCell>
@@ -146,34 +152,20 @@ export default function Patients() {
           <PaginationItem>
             <PaginationPrevious onPointerDown={() => setPage(p => Math.max(1, p - 1))} />
           </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              className={page === 1 ? selectedPageClass : ""}
-              onPointerDown={() => setPage(p =>  p === 1 ? p : p === maxPage ? p - 2 : p - 1)}
-            >
-              {page === 1 ? page : page === maxPage ? page - 2 : page - 1}
-            </PaginationLink>
-          </PaginationItem>
-          {maxPage > 1 &&
-            <PaginationItem>
-              <PaginationLink 
-                className={page !== 1 && (page !== maxPage && maxPage !== 2) ? selectedPageClass : ""}
-                onPointerDown={() => setPage(p => p === 1 ? p + 1 : maxPage === 2 || p !== maxPage ? p : p - 1)}
-              >
-                {page === 1 ? page + 1 : maxPage === 2 || page !== maxPage ? page : page - 1}
-              </PaginationLink>
-            </PaginationItem>
-          }
-          {maxPage > 2 &&
-            <PaginationItem>
-              <PaginationLink  
-                className={page === maxPage ? selectedPageClass : ""}
-                onPointerDown={() => setPage(p => p === 1 ? p + 2 : p === maxPage ? p : p + 1)}
-              >
-                {page === 1 ? page + 2 : page === maxPage ? page : page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          }
+          {pageWindow.map((displayPage, index) => (
+            <Fragment key={index}>
+              {displayPage &&
+                <PaginationItem>
+                  <PaginationLink
+                    className={page === displayPage ? selectedPageClass : ""}
+                    onPointerDown={() => setPage(displayPage)}
+                  >
+                    {displayPage}
+                  </PaginationLink>
+                </PaginationItem>
+              }
+            </Fragment>
+          ))}
           {maxPage > 3 && page < maxPage - 1 &&
             <PaginationItem>
               <PaginationEllipsis />

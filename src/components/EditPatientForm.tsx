@@ -17,7 +17,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
   const { groups } = useGroups()
 
   const EditPatientSchema = z.object({
-    patientId: z.number(),
+    patientId: z.string().regex(/^[0-9]$/),
     firstName: z.string(),
     groupId: z.enum(groups.map(group => group.groupId) as [string, ...string[]]),
     arrivalDate: z.string(),
@@ -27,7 +27,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
   const form = useForm<z.infer<typeof EditPatientSchema>>({
     resolver: zodResolver(EditPatientSchema),
     defaultValues: {
-      patientId: parseInt(patient.userId),
+      patientId: patient.patientId,
       firstName: patient.firstName,
       groupId: patient.groupId,
       arrivalDate: formatDateInputValue(patient.arrivalDate),
