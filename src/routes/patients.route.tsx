@@ -22,7 +22,6 @@ import { FormEvent, useMemo, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { Input } from "#/components/ui/input"
 import { Button } from "#/components/ui/button"
-import { Dialog, DialogContent } from "#/components/ui/dialog"
 import EditPatientDialog from "#/components/EditPatientDIalog"
 
 type PatientVisitState = "previous" | "present" | "arriving"
