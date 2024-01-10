@@ -22,6 +22,8 @@ import { FormEvent, useMemo, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { Input } from "#/components/ui/input"
 import { Button } from "#/components/ui/button"
+import { Dialog, DialogContent } from "#/components/ui/dialog"
+import EditPatientDialog from "#/components/EditPatientDIalog"
 
 type PatientVisitState = "previous" | "present" | "arriving"
 
@@ -135,6 +137,7 @@ export default function Patients() {
               <TableCell>{patient.firstName}</TableCell>
               <TableCell>{formatDisplayDate(patient.arrivalDate)}</TableCell>
               <TableCell>{patient.groupId}</TableCell>
+              <TableCell><EditPatientDialog patient={patient} /></TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -145,7 +148,7 @@ export default function Patients() {
             <PaginationPrevious onPointerDown={() => setPage(p => Math.max(1, p - 1))} />
           </PaginationItem>
           <PaginationItem>
-            <PaginationLink 
+            <PaginationLink
               className={page === 1 ? selectedPageClass : ""}
               onPointerDown={() => setPage(p =>  p === 1 ? p : p === maxPage ? p - 2 : p - 1)}
             >
