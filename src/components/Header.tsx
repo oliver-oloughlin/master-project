@@ -23,7 +23,7 @@ export default function Header() {
   return (
     <header className="w-screen h-20 px-10 flex justify-between items-center bg-[--bg-adfectus]">
       <Link to="/">
-        <img className="h-14 w-10" src="/static/adfectus_logo.png" />
+        <img className="h-14 w-10" src="/adfectus_logo.png" />
       </Link>
       <NavigationMenu>
         <NavigationMenuList className="gap-4">
