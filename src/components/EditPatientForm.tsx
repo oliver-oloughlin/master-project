@@ -37,7 +37,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     },
   })
 
-  function handleSubmit(values: z.infer<typeof EditPatientSchema>) {
+  function handleSubmit(/*values: z.infer<typeof EditPatientSchema>*/) {
 
   }
 
