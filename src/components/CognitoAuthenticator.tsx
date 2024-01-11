@@ -1,7 +1,7 @@
 import { Authenticator } from "@aws-amplify/ui-react"
 import { Amplify } from "aws-amplify"
-import "@aws-amplify/ui-react/styles.css"
 import { useUsername } from "#/stores/username"
+import "@aws-amplify/ui-react/styles.css"
 
 // Configure Amplify in index file or root file
 Amplify.configure({
@@ -18,13 +18,13 @@ export default function CognitoAuthenticator({ children }: { children?: React.Re
     <>
     {username && (
       <Authenticator
-        className="grid place-items-center h-screen"
+        className="h-screen grid place-items-center"
         hideSignUp
         formFields={{
           signIn: {
             username: {
-              isReadOnly: true,
-              defaultValue: username
+              //isReadOnly: true,
+              //defaultValue: username
             }
           }
         }}
