@@ -4,6 +4,9 @@ export function formatDisplayDate(date: string | Date) {
 }
 
 export function formatDateInputValue(date: string | Date) {
-  return new Intl.DateTimeFormat("fr-CA", {year: "numeric", month: "2-digit", day: "2-digit"})
-    .format(new Date(date))
+  const d = new Date(date)
+  const yearStr = d.getFullYear().toString()
+  const monthStr = (d.getMonth() + 1).toString().padStart(2, "0")
+  const dateStr = d.getDate().toString().padStart(2, "0")
+  return `${yearStr}-${monthStr}-${dateStr}`
 }
