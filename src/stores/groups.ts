@@ -1,14 +1,8 @@
 import { useEffect } from "react"
 import { createLoaderStore } from "./_loader"
-import { mockGroups } from "#/models/mocks/groups"
-import type { Group } from "#/models/group"
+import { getGroups } from "#/services/groups"
 
-// TODO: Replace with API request
-function fetcher() {
-  return new Promise<Group[]>(r => r(mockGroups))
-}
-
-const useLoader = createLoaderStore(fetcher)
+const useLoader = createLoaderStore(getGroups)
 
 export const useGroups = () => {
   const { data, fetch, loading, error } = useLoader()

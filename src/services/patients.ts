@@ -36,3 +36,7 @@ export async function updatePatient(patient: Patient) {
 export async function getPatient(patientId: string) {
   return mockPatients.find(p => p.patientId === patientId) ?? null
 }
+
+export function getPatients() {
+  return mockPatients
+}

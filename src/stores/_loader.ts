@@ -8,8 +8,8 @@ export type LoaderStore<T> = {
   mutate(fn: (data: T) => T): void
 }
 
-export function createLoaderStore<const T>(fetcher: () => Promise<T>) {
-  return create<LoaderStore<T>>((set) => ({
+export function createLoaderStore<const T>(fetcher: () => T | Promise<T>) {
+  return create<LoaderStore<Awaited<T>>>((set) => ({
     data: null,
     loading: false,
     error: null,

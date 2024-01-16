@@ -1,15 +1,9 @@
 import { useEffect } from "react"
 import { createLoaderStore } from "./_loader"
-import { mockPatients } from "#/models/mocks/patients"
 import type { Patient } from "#/models/patient"
-import { updatePatient as update } from "#/services/patient"
+import { getPatients, updatePatient as update } from "#/services/patients"
 
-// TODO: Replace with API request
-function fetcher() {
-  return new Promise<Patient[]>(r => r(mockPatients))
-}
-
-const useLoader = createLoaderStore(fetcher)
+const useLoader = createLoaderStore(getPatients)
 
 export const usePatients = () => {
   const { data, fetch, loading, error, mutate } = useLoader()
