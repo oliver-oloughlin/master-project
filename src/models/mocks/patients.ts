@@ -1,5 +1,6 @@
 import type { Patient } from "#/models/patient"
 import { mockGroups } from "./groups"
+import { mockRatings } from "./ratings"
 
 const nameSet = new Set([
   "Adrian",
@@ -126,11 +127,17 @@ for (let i = 0; i < 300; i++) {
   const arrivalDate = new Date(start + Math.random() * range).toISOString()
   const firstName = names[Math.floor(Math.random() * names.length)]
   const groupId = mockGroups[i % mockGroups.length].groupId
-  mockPatients.push({
+
+  const patient = {
     firstName,
     arrivalDate,
     groupId,
     instId: "BS",
     patientId: (Math.round(Math.random() * 1_000_000)).toString()
+  }
+
+  mockPatients.push({
+    ...patient,
+    ratings: mockRatings(patient)
   })
 }

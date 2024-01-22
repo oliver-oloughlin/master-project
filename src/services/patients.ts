@@ -33,10 +33,14 @@ export async function updatePatient(patient: Patient) {
   */
 }
 
-export async function getPatient(patientId: string) {
+export async function getPatientById(patientId: string) {
   return mockPatients.find(p => p.patientId === patientId) ?? null
 }
 
 export function getPatients() {
   return mockPatients
+}
+
+export function getPatientsByGroupId(groupId: string) {
+  return mockPatients.filter(p => p.groupId === groupId)
 }
