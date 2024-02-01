@@ -14,13 +14,13 @@ import {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationPrevious
+  PaginationPrevious,
 } from "#/components/ui/pagination"
 import { FormEvent, Fragment, useMemo, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { Input } from "#/components/ui/input"
 import { Button } from "#/components/ui/button"
-import EditPatientDialog from "#/components/EditPatientDIalog"
+import EditPatientDialog from "#/components/EditPatientDialog"
 import { Patient } from "#/models/patient"
 import ViewPatientDialog from "./ViewPatientDialog"
 import { Link } from "@tanstack/react-router"
@@ -28,6 +28,8 @@ import { twMerge } from "tailwind-merge"
 import Repeat from "./Repeat"
 import { Skeleton } from "./ui/skeleton"
 import Triangle from "./Triangle"
+import AddPatientDialog from "./AddPatientDialog"
+import SearchBox from "./SearchBox"
 
 type PatientVisitState = "previous" | "present" | "arriving"
 type OrderBy = "id" | "name" | "arrival" | "group"
@@ -173,10 +175,30 @@ export default function PatientsTable({ patients, loading, error, className }: P
           Kommende
         </Button>
       </span>
-      <Input
-        type="search"
-        placeholder="Søk etter pasient"
-        onInput={handleSearch}
+      <AddPatientDialog />
+      <SearchBox
+        placeholder="Søk etter pasient..."
+        items={viewPatients}
+        defaultSearchKey="firstName"
+        searchKeys={[
+          {
+            key: "patientId",
+            label: "Pasient ID",
+          },
+          {
+            key: "firstName",
+            label: "Fornavn"
+          },
+          {
+            key: "arrivalDate",
+            label: "Ankomst",
+          }, 
+          {
+            key: "groupId",
+            label: "Gruppe"
+          }
+        ]}
+        onInput={(searchedPatients) => {}}
       />
       <Table>
         <TableHeader>
