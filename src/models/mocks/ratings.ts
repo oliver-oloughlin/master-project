@@ -1,21 +1,25 @@
-import { Rating, Score, StatusSchema } from "../rating"
+import { Rating, Score, ScoreMap, StatusSchema } from "../rating"
 import type { Patient } from "../patient.ts"
 import { DEFAULT_PATIENT_STAY_DURATION_DAYS } from "#/utils/constants.ts"
 
 const activities = [
-  "swimming",
-  "horseback riding",
-  "hiking",
-  "fishing",
+  "Basseng",
+  "Ri på hest",
+  "Klatring",
+  "Gymsal",
+  "Være på tur",
+  "Friluftsliv",
+  "Alpin",
+  "Skøyter",
+  "Langrenn",
+  "Aktivitet skjerm",
+  "Leke ute",
+  "Bevegelse musikk",
+  "Utendørs vann",
+  "Sykle",
 ]
 
-const scoreValues = [
-  1,
-  2,
-  3,
-  4,
-  5,
-]
+const scoreValues = Array.from(ScoreMap.keys())
 
 export function mockRatings(patient: Omit<Patient, "ratings">) {
   const ratings: Rating[] = []
@@ -45,16 +49,23 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
         activity,
         score: scoreValues[Math.floor(Math.random() * scoreValues.length)]
       }))
-  
-      const min = new Date("2022-05-01").valueOf()
-      const max = Date.now()
-      const diff = max - min
+
+      const arrivalDepartureDIff = (departureDate.valueOf() - arrivalDate.valueOf())
+
+      const timestampDate = status === "before" 
+        ? new Date(arrivalDate.valueOf() - 7 * 24 * 60 * 60 * 1_000)
+        : status === "mid"
+        ? new Date(arrivalDate.valueOf() + arrivalDepartureDIff / 2)
+        : status === "final"
+        ? departureDate
+        : new Date(arrivalDate.valueOf() + Math.random() * arrivalDepartureDIff)
+
   
       ratings.push({
         patientId: patient.patientId,
         scores,
         status,
-        timestamp: new Date(min + Math.random() * diff).toISOString()
+        timestamp: timestampDate.toISOString(),
       })
     }
   }

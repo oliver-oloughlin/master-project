@@ -10,7 +10,7 @@ export default function CognitoUserButton() {
         <UserAvatar />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <Button variant="ghost" onClick={() => Auth.signOut()}>Sign Out</Button>
+        <Button variant="ghost" onClick={() => Auth.signOut()}>Logg ut</Button>
       </DropdownMenuContent>
     </DropdownMenu>
   )

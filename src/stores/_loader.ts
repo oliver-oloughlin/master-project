@@ -1,22 +1,24 @@
 import { create } from "zustand"
 
-export type LoaderStore<T> = {
-  data: T | null
+export type LoaderStore<TArgs extends unknown[], TData> = {
+  data: TData | null
   loading: boolean
   error: unknown
-  fetch(): Promise<void>
-  mutate(fn: (data: T) => T): void
+  fetch(...args: TArgs): Promise<void>
+  mutate(fn: (data: TData) => TData): void
 }
 
-export function createLoaderStore<const T>(fetcher: () => T | Promise<T>) {
-  return create<LoaderStore<Awaited<T>>>((set) => ({
+export type FetcherView<T extends (...args: any[]) => any> = NonNullable<ReturnType<T>> // eslint-disable-line
+
+export function createLoaderStore<const TArgs extends unknown[], const TData>(fetcher: (...args: TArgs) => TData | Promise<TData>) {
+  return create<LoaderStore<TArgs, Awaited<TData>>>((set) => ({
     data: null,
     loading: false,
     error: null,
-    async fetch() {
+    async fetch(...args: TArgs) {
       try {
         set({ loading: true })
-        const data = await fetcher()
+        const data = await fetcher(...args)
         set({ data, loading: false })
       } catch (error) {
         set({ error })

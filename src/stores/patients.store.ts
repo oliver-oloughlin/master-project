@@ -1,12 +1,14 @@
 import { useEffect } from "react"
-import { createLoaderStore } from "./_loader"
+import { FetcherView, createLoaderStore } from "./_loader"
 import type { Patient } from "#/models/patient"
-import { getPatients, updatePatient as update } from "#/services/patients"
+import { getPatients, updatePatient as update } from "#/services/patients.service"
 
-const useLoader = createLoaderStore(getPatients)
+const usePatientsLoader = createLoaderStore(getPatients)
+
+export type PatientsView = FetcherView<typeof getPatients>
 
 export const usePatients = () => {
-  const { data, fetch, loading, error, mutate } = useLoader()
+  const { data, fetch, loading, error, mutate } = usePatientsLoader()
 
   // Update patient and reflect update in patients list
   async function updatePatient(patient: Patient) {

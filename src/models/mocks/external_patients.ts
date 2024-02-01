@@ -1,9 +1,8 @@
-import type { Patient } from "#/models/patient"
+import type { ExternalPatient } from "../external_patient"
 import { mockGroups } from "./groups"
-import { mockRatings } from "./ratings"
 import { names } from "./_names"
 
-export const mockPatients: Patient[] = []
+export const mockExternalPatients: ExternalPatient[] = []
 
 for (let i = 0; i < 300; i++) {
   const start = new Date("2023-05-01").valueOf()
@@ -19,11 +18,9 @@ for (let i = 0; i < 300; i++) {
     groupId,
     instId: "BS",
     patientId: (Math.round(Math.random() * 1_000_000)).toString(),
-    avatarUrl: "/patient_avatar.png"
   }
 
-  mockPatients.push({
+  mockExternalPatients.push({
     ...patient,
-    ratings: mockRatings(patient)
   })
 }

@@ -9,6 +9,7 @@ export const PatientSchema = z.object({
   arrivalDate: z.string(),
   departureDate: z.string().optional(),
   ratings: z.array(RatingSchema),
+  avatarUrl: z.string().optional(),
 })
 
 export type Patient = z.infer<typeof PatientSchema>

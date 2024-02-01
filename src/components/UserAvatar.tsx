@@ -3,7 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "#/components/ui/avatar"
-import { useUsername } from "#/stores/username"
+import { useUsername } from "#/stores/username.store"
 
 export default function UserAvatar() {
   const { username } = useUsername()

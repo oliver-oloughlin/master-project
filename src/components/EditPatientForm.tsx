@@ -1,5 +1,5 @@
 import type { Patient } from "#/models/patient"
-import { useGroups } from "#/stores/groups"
+import { useGroups } from "#/stores/groups.store"
 import { formatDateInputValue } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
