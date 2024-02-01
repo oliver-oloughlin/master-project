@@ -50,14 +50,12 @@ export default function PatientsTable({ patients, loading, error, className }: P
   const [order, setOrder] = useState<Order>("asc")
 
   // Order by selector
-  function selectOrderBy(orderBy: OrderBy) {
-    setOrderBy(ob => {
-      if (ob === orderBy) {
-        console.log("Change order?")
-        setOrder(o => o === "asc" ? "desc" : "asc")
-      }
-      return orderBy
-    })
+  function selectOrderBy(newOrderBy: OrderBy) {
+    if (orderBy === newOrderBy) {
+      setOrder(o => o === "asc" ? "desc" : "asc")
+    } else {
+      setOrderBy(newOrderBy)
+    }
   }
 
   // View selector
