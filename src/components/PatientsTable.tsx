@@ -16,9 +16,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "#/components/ui/pagination"
-import { FormEvent, Fragment, useMemo, useState } from "react"
-import fuzzysort from "fuzzysort"
-import { Input } from "#/components/ui/input"
+import { Fragment, useMemo, useState } from "react"
 import { Button } from "#/components/ui/button"
 import EditPatientDialog from "#/components/EditPatientDialog"
 import { Patient } from "#/models/patient"
@@ -45,11 +43,11 @@ export type PatientsTableProps = {
 }
 
 export default function PatientsTable({ patients, loading, error, className }: PatientsTableProps) {
-  const [search, setSearch] = useState("")
   const [view, setView] = useState<PatientVisitState>("present")
   const [page, setPage] = useState(1)
   const [orderBy, setOrderBy] = useState<OrderBy>("name")
   const [order, setOrder] = useState<Order>("asc")
+  const [searchedPatients, setSearchedPatients] = useState(patients)
 
   // Order by selector
   function selectOrderBy(newOrderBy: OrderBy) {
@@ -67,33 +65,25 @@ export default function PatientsTable({ patients, loading, error, className }: P
   }
 
   // Search handler
-  function handleSearch(event: FormEvent<HTMLInputElement>) {
-    const value = (event.target as HTMLInputElement).value
-    setSearch(value)
+  function handleSearch(patients: Patient[]) {
+    setSearchedPatients(patients)
     setPage(1)
   }
 
   // Filter patients by selected view
   const viewPatients = useMemo(() => {
-    return patients.filter(patient => {
+    return searchedPatients.filter(patient => {
       const arrivalDate = new Date(patient.arrivalDate).valueOf()
       const departureDate = patient.departureDate ? new Date(patient.departureDate).valueOf() : arrivalDate + 21 * 24 * 60 * 60 * 1000
       const now = Date.now()
       const patientVisitState: PatientVisitState = now < arrivalDate ? "arriving" : now > departureDate ? "previous" : "present"
       return view === patientVisitState
     })
-  }, [patients, view])
-
-  // Search viewed patients
-  const searchedPatients = useMemo(() => {
-    return fuzzysort
-      .go(search, viewPatients, { key: "firstName", all: true })
-      .map(r => r.obj)
-  }, [search, viewPatients])
+  }, [searchedPatients, view])
 
   // Sort patients by name
   const sortedPatients = useMemo(() => {
-    return searchedPatients
+    return viewPatients
       .sort((p1, p2) => {
         let val1: string
         let val2: string
@@ -115,7 +105,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
         const comp = val1.toLowerCase().localeCompare(val2.toLowerCase())
         return order === "asc" ? comp : -comp
       })
-  }, [searchedPatients, order, orderBy])
+  }, [viewPatients, order, orderBy])
 
   const start = PAGE_SIZE * (page - 1)
   const end = start + PAGE_SIZE
@@ -178,7 +168,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
       <AddPatientDialog />
       <SearchBox
         placeholder="Søk etter pasient..."
-        items={viewPatients}
+        items={patients}
         defaultSearchKey="firstName"
         searchKeys={[
           {
@@ -187,7 +177,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
           },
           {
             key: "firstName",
-            label: "Fornavn"
+            label: "Fornavn",
           },
           {
             key: "arrivalDate",
@@ -195,10 +185,10 @@ export default function PatientsTable({ patients, loading, error, className }: P
           }, 
           {
             key: "groupId",
-            label: "Gruppe"
+            label: "Gruppe",
           }
         ]}
-        onInput={(searchedPatients) => {}}
+        onInput={handleSearch}
       />
       <Table>
         <TableHeader>
