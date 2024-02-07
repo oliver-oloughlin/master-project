@@ -1,6 +1,5 @@
 import { twMerge } from "tailwind-merge"
 
-
 export type TriangleProps = {
   oriantation: "up" | "right" | "down" | "left"
   size?: string,

@@ -1,44 +1,43 @@
-import { useEffect } from "react"
-import { FetcherView, createLoaderStore } from "./_loader"
-import type { Patient } from "#/models/patient"
-import { getPatients, updatePatient as update } from "#/services/patients.service"
+import { createLoaderStore } from "./_loader"
+import { getPatientById, getPatients } from "#/services/patients.service"
 
 const usePatientsLoader = createLoaderStore(getPatients)
 
-export type PatientsView = FetcherView<typeof getPatients>
+export type PatientsView = ReturnType<typeof getPatients>
 
 export const usePatients = () => {
   const { data, fetch, loading, error, mutate } = usePatientsLoader()
 
-  // Update patient and reflect update in patients list
-  async function updatePatient(patient: Patient) {
-    const success = await update(patient)
-    if (!success) {
-      return
-    }
+  async function invalidatePatient(patientId: string) {
+    const patient = await getPatientById(patientId)
 
-    mutate(data => {
-      const index = data.findIndex(p => p.patientId)
+    // Returning a new list is important to make React re-render and reflect any changes
+    mutate((data) => {
+      const index = data.findIndex(p => p.patientId === patientId)
 
-      if (index >= 0) {
-        data[index] = patient
+      if (index < 0 && !patient) {
+        return [...data]
       }
 
-      return data
+      if (!patient) {
+        return [...data.slice(0, index), ...data.slice(index + 1)]
+      }
+
+      if (index < 0) {
+        data.push(patient)
+        return [...data]
+      }
+
+      data[index] = patient
+      return [...data]
     })
   }
 
-  // Fetch users on initial load
-  useEffect(() => {
-    fetch()
-  }, [fetch])
-
-  // Exposed values
   return {
     patients: data ?? [],
     loading,
     error,
-    fetch,
-    updatePatient,
+    fetchPatients: fetch,
+    invalidatePatient,
   }
 }

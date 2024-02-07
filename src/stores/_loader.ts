@@ -8,10 +8,8 @@ export type LoaderStore<TArgs extends unknown[], TData> = {
   mutate(fn: (data: TData) => TData): void
 }
 
-export type FetcherView<T extends (...args: any[]) => any> = NonNullable<ReturnType<T>> // eslint-disable-line
-
 export function createLoaderStore<const TArgs extends unknown[], const TData>(fetcher: (...args: TArgs) => TData | Promise<TData>) {
-  return create<LoaderStore<TArgs, Awaited<TData>>>((set) => ({
+  return create<LoaderStore<TArgs, Awaited<TData>>>((set, get) => ({
     data: null,
     loading: false,
     error: null,
@@ -25,11 +23,17 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(fe
       }
     },
     mutate(fn) {
-      if (!this.data) {
-        return
+      try {
+        const { data } = get()
+        if (!data) {
+          return
+        }
+        
+        set({ data: fn(data) })
+      } catch (error) {
+        console.error(error)
+        set({ error })
       }
-      
-      set({ data: fn(this.data) })
     }
   }))
 }

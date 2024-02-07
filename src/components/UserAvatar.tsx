@@ -4,9 +4,15 @@ import {
   AvatarImage,
 } from "#/components/ui/avatar"
 import { useUsername } from "#/stores/username.store"
+import { useEffect } from "react"
 
 export default function UserAvatar() {
-  const { username } = useUsername()
+  const { username, fetchUsername } = useUsername()
+
+  useEffect(() => {
+    fetchUsername()
+  }, [fetchUsername])
+
   return (
     <Avatar>
       <AvatarImage />

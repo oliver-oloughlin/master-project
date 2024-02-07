@@ -2,16 +2,26 @@ import { mockPatients } from "#/models/mocks/patients"
 import type { Patient } from "#/models/patient"
 import { sleep } from "#/utils/sleep"
 
-export async function updatePatient(patient: Patient) {
-  await sleep(500)
+export async function updatePatient(patientId: string, data: Partial<Patient>) {
+  try {
+    await sleep(500)
 
-  const index = mockPatients.findIndex(p => p.patientId === patient.patientId)
-  if (index < 0) {
+    const index = mockPatients.findIndex(p => p.patientId === patientId)
+    if (index < 0) {
+      return false
+    }
+
+    const patient = mockPatients[index]
+    mockPatients[index] = {
+      ...patient,
+      ...data,
+    }
+
+    return true
+  } catch (e) {
+    console.error(e)
     return false
   }
-
-  mockPatients[index] = patient
-  return true
 }
 
 export async function getPatientById(patientId: string) {

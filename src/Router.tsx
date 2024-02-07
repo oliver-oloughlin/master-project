@@ -11,7 +11,6 @@ import Root from "./routes/root.route"
 import NotFound from "./routes/404"
 import Index from "./routes/index.route"
 import Groups from "./routes/group.$groupId.route"
-import Patients from "./routes/patients.route"
 
 // Create routes
 export const rootRoute = new RootRoute({
@@ -35,17 +34,10 @@ export const groupRoute = new Route({
   getParentRoute: () => rootRoute
 })
 
-export const patientsRoute = new Route({
-  path: "/patients",
-  component: Patients,
-  getParentRoute: () => rootRoute
-})
-
 // Create route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
   groupRoute,
-  patientsRoute,
 ])
 
 // Create router

@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Button } from "./ui/button"
+import { usePatient } from "#/stores/patient.store"
 
 export type EditPatientFormProps = {
   patient: Patient
@@ -15,9 +16,10 @@ export type EditPatientFormProps = {
 
 export default function EditPatientForm({ patient }: EditPatientFormProps) {
   const { groups } = useGroups()
+  const { updatePatient } = usePatient(patient.patientId)
 
   const EditPatientSchema = z.object({
-    patientId: z.string().regex(/^[0-9]$/),
+    patientId: z.string().regex(/^\d+$/),
     firstName: z.string(),
     groupId: z.enum(groups.map(group => group.groupId) as [string, ...string[]]),
     arrivalDate: z.string(),
@@ -37,8 +39,11 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     },
   })
 
-  function handleSubmit(/*values: z.infer<typeof EditPatientSchema>*/) {
-
+  async function handleSubmit(values: z.infer<typeof EditPatientSchema>) {
+    const success = await updatePatient(values)
+    if (success) {
+      // TODO
+    }
   }
 
   return (
