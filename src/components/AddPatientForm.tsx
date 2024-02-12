@@ -1,6 +1,5 @@
-import type { Patient } from "#/models/patient"
 import { useGroups } from "#/stores/groups.store"
-import { formatDateInputValue } from "#/utils/formatters"
+import { formatDateInputValue, formatDisplayDate } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -8,19 +7,26 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Button } from "./ui/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { usePatients } from "#/stores/patients.store"
+import { useExternalPatients } from "#/stores/external_patients.store"
+import { ExternalPatient } from "#/models/external_patient"
+import SearchBox from "./SearchBox"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 
-export type EditPatientFormProps = {
-  patient: Patient
-}
-
-export default function EditPatientForm({ patient }: EditPatientFormProps) {
+export default function AddPatientForm() {
   const { groups } = useGroups()
-  const { updatePatient } = usePatients()
+  const { addPatient } = usePatients()
+  const { externalPatients, fetchExternalPatients } = useExternalPatients()
+  const [searchedExternalPatients, setSearchedExternalPatients] = useState(externalPatients)
+  const [externalPatient, setExternalPatient] = useState<ExternalPatient | null>(null)
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">("unsaved")
 
-  const EditPatientSchema = z.object({
+  useEffect(() => {
+    fetchExternalPatients()
+  }, [fetchExternalPatients])
+
+  const AddPatientSchema = z.object({
     patientId: z.string().regex(/^\d+$/),
     firstName: z.string().min(1),
     groupId: z.enum(groups.map(group => group.groupId) as [string, ...string[]]),
@@ -28,21 +34,28 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     departureDate: z.string(),
   })
 
-  const form = useForm<z.infer<typeof EditPatientSchema>>({
-    resolver: zodResolver(EditPatientSchema),
+  const form = useForm<z.infer<typeof AddPatientSchema>>({
+    resolver: zodResolver(AddPatientSchema),
     defaultValues: {
-      patientId: patient.patientId,
-      firstName: patient.firstName,
-      groupId: patient.groupId,
-      arrivalDate: formatDateInputValue(patient.arrivalDate),
-      departureDate: patient.departureDate 
-        ? formatDateInputValue(patient.departureDate)
-        : formatDateInputValue(new Date(new Date(patient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000))
+      patientId: externalPatient?.patientId,
+      firstName: externalPatient?.firstName,
+      groupId: externalPatient?.groupId,
+      arrivalDate: externalPatient ? formatDateInputValue(externalPatient.arrivalDate) : undefined,
+      departureDate: externalPatient?.departureDate 
+        ? formatDateInputValue(externalPatient.departureDate)
+        : externalPatient?.arrivalDate 
+        ? formatDateInputValue(new Date(new Date(externalPatient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000))
+        : undefined
     },
   })
 
-  async function handleSubmit(values: z.infer<typeof EditPatientSchema>) {
-    const success = await updatePatient(patient.patientId, values)
+  async function handleSubmit(values: z.infer<typeof AddPatientSchema>) {
+    const success = await addPatient({
+      ...values,
+      instId: groups.at(0)?.instId ?? "",
+      ratings: [],
+    })
+
     if (success) {
       setSaveState("saved")
     } else {
@@ -51,6 +64,52 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
   }
 
   return (
+    <>
+    <div className="grid">
+      <SearchBox 
+        items={externalPatients} 
+        searchKeys={[
+          {
+            key: "patientId",
+            label: "Pasient ID"
+          },
+          {
+            key: "firstName",
+            label: "Fornavn",
+          },
+          {
+            key: "groupId",
+            label: "Gruppe",
+          }
+        ]}
+        defaultSearchKey="firstName"
+        onInput={setSearchedExternalPatients}
+      />
+      <div className="overflow-y-auto max-h-80">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>PasientID</TableHead>
+              <TableHead>Fornavn</TableHead>
+              <TableHead>Ankomst</TableHead>
+              <TableHead>Gruppe</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {searchedExternalPatients.map(ep => (
+              <TableRow>
+                <TableCell>{ep.patientId}</TableCell>
+                <TableCell>{ep.firstName}</TableCell>
+                <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
+                <TableCell>{ep.groupId}</TableCell>
+                <TableCell><Button onPointerDown={() => setExternalPatient(ep)}>Velg</Button></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+    <br/>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <FormField
@@ -124,15 +183,16 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
           <>
           <br/>
           {saveState === "saved" 
-            ? <p className="text-green-500">Endringer lagret</p> 
+            ? <p className="text-green-500">Pasient lagt til</p> 
             : <p className="text-red-500">Noe gikk galt</p>}
           </>
         }
         <br/>
         <div>
-          <Button type="submit" className="bg-[--bg-adfectus]">Lagre endringer</Button>
+          <Button type="submit" className="bg-[--bg-adfectus]">Legg til pasient</Button>
         </div>
       </form>
     </Form>
+    </>
   )
 }

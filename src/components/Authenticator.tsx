@@ -1,7 +1,7 @@
 import { Authenticator } from "@aws-amplify/ui-react"
 import { Amplify } from "aws-amplify"
-import { useUsername } from "#/stores/username.store"
 import "@aws-amplify/ui-react/styles.css"
+import { useUsername } from "#/stores/username.store"
 import { useEffect } from "react"
 
 // Configure Amplify in index file or root file
@@ -13,7 +13,7 @@ Amplify.configure({
   }
 })
 
-export default function CognitoAuthenticator({ children }: { children?: React.ReactNode }) {
+export default function OuterAuthenticator({ children }: { children?: React.ReactNode }) {
   const { username, fetchUsername } = useUsername()
 
   useEffect(() => {
@@ -21,19 +21,19 @@ export default function CognitoAuthenticator({ children }: { children?: React.Re
   }, [fetchUsername])
 
   return (
-      <Authenticator
-        className="h-screen grid place-items-center"
-        hideSignUp
-        formFields={{
-          signIn: {
-            username: {
-              isReadOnly: true,
-              defaultValue: username ?? ""
-            }
+    <Authenticator
+      className="h-screen grid place-items-center"
+      hideSignUp
+      formFields={{
+        signIn: {
+          username: {
+            defaultValue: username ?? undefined,
+            isReadOnly: !!username
           }
-        }}
-      >
-        {children}
-      </Authenticator>
+        }
+      }}
+    >
+      {children}
+    </Authenticator>
   )
 }

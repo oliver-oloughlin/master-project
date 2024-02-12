@@ -109,16 +109,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
 
   const start = PAGE_SIZE * (page - 1)
   const end = start + PAGE_SIZE
-  const maxPage = Math.floor((sortedPatients.length - 1) / PAGE_SIZE) + 1
   const patientsPage = sortedPatients.slice(start, end)
-  
-  const pageWindow = [
-    (Math.max(1, page === 1 ? 1 : page === maxPage ? page - 2 : page - 1)),
-    (page === 1 && maxPage > 1 ? page + 1 : maxPage > 2 && page === maxPage ? page - 1 : maxPage > 1 ? page : null),
-    (maxPage > 2 && page === maxPage ? page : maxPage > 2 && page !== 1 ? page + 1 : maxPage > 2 ? page + 2 : null)
-  ]
-
-  const selectedPageClass = "border-slate-200 border-2"
 
   // Return skeleton if loading
   if (loading) {
@@ -251,6 +242,37 @@ export default function PatientsTable({ patients, loading, error, className }: P
           ))}
         </TableBody>
       </Table>
+      <PaginationBar 
+        page={page} 
+        totalItems={sortedPatients.length} 
+        pageSize={PAGE_SIZE} 
+        setPage={setPage}
+      />
+    </section>
+  )
+}
+
+function PaginationBar({
+  pageSize,
+  page,
+  totalItems,
+  setPage,
+}: {
+  pageSize: number,
+  page: number,
+  totalItems: number,
+  setPage(setter: number | ((page: number) => void)): void
+}) {
+  const maxPage = Math.floor(totalItems / pageSize) + 1
+  
+  const pageWindow = [
+    (Math.max(1, page === 1 ? 1 : page === maxPage ? page - 2 : page - 1)),
+    (page === 1 && maxPage > 1 ? page + 1 : maxPage > 2 && page === maxPage ? page - 1 : maxPage > 1 ? page : null),
+    (maxPage > 2 && page === maxPage ? page : maxPage > 2 && page !== 1 ? page + 1 : maxPage > 2 ? page + 2 : null)
+  ]
+  
+  return (
+    <div className="grid place-items-center gap-2">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -261,7 +283,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
               {displayPage &&
                 <PaginationItem>
                   <PaginationLink
-                    className={`cursor-pointer ${page === displayPage ? selectedPageClass : ""}`}
+                    className={`cursor-pointer ${page === displayPage ? "border-slate-200 border-2" : ""}`}
                     onPointerDown={() => setPage(displayPage)}
                   >
                     {displayPage}
@@ -280,6 +302,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </section>
+      <p className="text-slate-500">{pageSize * (page - 1) + 1}-{Math.min(totalItems, pageSize * (page - 1) + pageSize)} av {totalItems}</p>
+    </div>
   )
 }

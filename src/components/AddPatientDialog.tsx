@@ -1,3 +1,4 @@
+import AddPatientForm from "./AddPatientForm"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 
 export default function AddPatientDialog() {
@@ -12,6 +13,7 @@ export default function AddPatientDialog() {
         <DialogHeader>
           <DialogTitle>Legg til pasient</DialogTitle>
         </DialogHeader>
+        <AddPatientForm />
       </DialogContent>
     </Dialog>
   )
