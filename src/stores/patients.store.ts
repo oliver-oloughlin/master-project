@@ -4,8 +4,6 @@ import { Patient } from "#/models/patient"
 
 const usePatientsLoader = createLoaderStore(getPatients)
 
-export type PatientsView = Awaited<ReturnType<typeof getPatients>>
-
 export const usePatients = () => {
   const { data, fetch, loading, error, mutate } = usePatientsLoader()
 
@@ -58,7 +56,7 @@ export const usePatients = () => {
   async function addPatient(patient: Patient) {
     const success = await _addPatient(patient)
     if (success) {
-      mutate(data => [...data, patient])
+      mutate(data => data.some(p => p.patientId === patient.patientId) ? [...data] : [...data, patient])
     }
     return success
   }

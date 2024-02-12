@@ -10,16 +10,15 @@ import { Button } from "./ui/button"
 import { useEffect, useState } from "react"
 import { usePatients } from "#/stores/patients.store"
 import { useExternalPatients } from "#/stores/external_patients.store"
-import { ExternalPatient } from "#/models/external_patient"
 import SearchBox from "./SearchBox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { ExternalPatient } from "#/models/external_patient"
 
 export default function AddPatientForm() {
   const { groups } = useGroups()
   const { addPatient } = usePatients()
   const { externalPatients, fetchExternalPatients } = useExternalPatients()
   const [searchedExternalPatients, setSearchedExternalPatients] = useState(externalPatients)
-  const [externalPatient, setExternalPatient] = useState<ExternalPatient | null>(null)
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">("unsaved")
 
   useEffect(() => {
@@ -36,18 +35,19 @@ export default function AddPatientForm() {
 
   const form = useForm<z.infer<typeof AddPatientSchema>>({
     resolver: zodResolver(AddPatientSchema),
-    defaultValues: {
-      patientId: externalPatient?.patientId,
-      firstName: externalPatient?.firstName,
-      groupId: externalPatient?.groupId,
-      arrivalDate: externalPatient ? formatDateInputValue(externalPatient.arrivalDate) : undefined,
-      departureDate: externalPatient?.departureDate 
-        ? formatDateInputValue(externalPatient.departureDate)
-        : externalPatient?.arrivalDate 
-        ? formatDateInputValue(new Date(new Date(externalPatient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000))
-        : undefined
-    },
   })
+
+  function setExternalPatient(patient: ExternalPatient) {
+    form.setValue("patientId", patient.patientId)
+    form.setValue("firstName", patient.firstName)
+    form.setValue("arrivalDate", formatDateInputValue(patient.arrivalDate))
+    form.setValue("groupId", patient.groupId)
+    form.setValue("departureDate", formatDateInputValue(
+      patient.departureDate 
+        ? patient.departureDate 
+        : new Date(new Date(patient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000))
+    )
+  }
 
   async function handleSubmit(values: z.infer<typeof AddPatientSchema>) {
     const success = await addPatient({
@@ -64,135 +64,134 @@ export default function AddPatientForm() {
   }
 
   return (
-    <>
-    <div className="grid">
-      <SearchBox 
-        items={externalPatients} 
-        searchKeys={[
-          {
-            key: "patientId",
-            label: "Pasient ID"
-          },
-          {
-            key: "firstName",
-            label: "Fornavn",
-          },
-          {
-            key: "groupId",
-            label: "Gruppe",
-          }
-        ]}
-        defaultSearchKey="firstName"
-        onInput={setSearchedExternalPatients}
-      />
-      <div className="overflow-y-auto max-h-80">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>PasientID</TableHead>
-              <TableHead>Fornavn</TableHead>
-              <TableHead>Ankomst</TableHead>
-              <TableHead>Gruppe</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {searchedExternalPatients.map(ep => (
+    <div className="grid gap-4">
+      <div className="grid gap-1">
+        <SearchBox 
+          items={externalPatients} 
+          searchKeys={[
+            {
+              key: "patientId",
+              label: "Pasient ID"
+            },
+            {
+              key: "firstName",
+              label: "Fornavn",
+            },
+            {
+              key: "groupId",
+              label: "Gruppe",
+            }
+          ]}
+          defaultSearchKey="firstName"
+          onInput={setSearchedExternalPatients}
+        />
+        <div className="overflow-y-auto max-h-80">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell>{ep.patientId}</TableCell>
-                <TableCell>{ep.firstName}</TableCell>
-                <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
-                <TableCell>{ep.groupId}</TableCell>
-                <TableCell><Button onPointerDown={() => setExternalPatient(ep)}>Velg</Button></TableCell>
+                <TableHead>PasientID</TableHead>
+                <TableHead>Fornavn</TableHead>
+                <TableHead>Ankomst</TableHead>
+                <TableHead>Gruppe</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-    <br/>
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <FormField
-          control={form.control}
-          name="patientId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Pasientnummer</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Fornavn</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="groupId"
-          render={({ field: { value, ...rest } }) => (
-            <FormItem>
-              <FormLabel>Gruppe</FormLabel>
-              <FormControl>
-                <Select defaultValue={value} {...rest} >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map(group => <SelectItem key={group.groupId} value={group.groupId}>{group.groupId}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="arrivalDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Ankomstdato</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="departureDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Avreisedato</FormLabel>
-              <FormControl>
-                <Input type="date" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        {saveState !== "unsaved" && 
-          <>
-          <br/>
-          {saveState === "saved" 
-            ? <p className="text-green-500">Pasient lagt til</p> 
-            : <p className="text-red-500">Noe gikk galt</p>}
-          </>
-        }
-        <br/>
-        <div>
-          <Button type="submit" className="bg-[--bg-adfectus]">Legg til pasient</Button>
+            </TableHeader>
+            <TableBody>
+              {searchedExternalPatients.map(ep => (
+                <TableRow>
+                  <TableCell>{ep.patientId}</TableCell>
+                  <TableCell>{ep.firstName}</TableCell>
+                  <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
+                  <TableCell>{ep.groupId}</TableCell>
+                  <TableCell><Button onPointerDown={() => setExternalPatient(ep)}>Velg</Button></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </form>
-    </Form>
-    </>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <FormField
+            control={form.control}
+            name="patientId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Pasientnummer</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fornavn</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="groupId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Gruppe</FormLabel>
+                <FormControl>
+                  <Select {...field} onValueChange={groupId => form.setValue("groupId", groupId)} >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent data-content>
+                      {groups.map(group => <SelectItem key={group.groupId} value={group.groupId}>{group.groupId}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="arrivalDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Ankomstdato</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="departureDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Avreisedato</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          {saveState !== "unsaved" && 
+            <>
+            <br/>
+            {saveState === "saved" 
+              ? <p className="text-green-500">Pasient lagt til</p> 
+              : <p className="text-red-500">Noe gikk galt</p>}
+            </>
+          }
+          <br/>
+          <div>
+            <Button type="submit" className="bg-[--bg-adfectus]">Legg til pasient</Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   )
 }

@@ -80,11 +80,11 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
         <FormField
           control={form.control}
           name="groupId"
-          render={({ field: { value, ...rest } }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Gruppe</FormLabel>
               <FormControl>
-                <Select defaultValue={value} {...rest} >
+                <Select {...field} onValueChange={groupId => form.setValue("groupId", groupId)} >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

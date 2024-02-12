@@ -3,8 +3,6 @@ import { getUsername } from "#/services/users.service"
 
 const useLoader = createLoaderStore(getUsername)
 
-export type UsernameView = Awaited<ReturnType<typeof getUsername>>
-
 export const useUsername = () => {
   const { data, fetch, loading, error } = useLoader()
   return {
