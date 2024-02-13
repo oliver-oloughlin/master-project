@@ -2,6 +2,7 @@ import UserButton from "./UserButton"
 import { Link, useMatches } from "@tanstack/react-router"
 import { useGroups } from "#/stores/groups.store"
 import { useEffect, useState } from "react"
+import Triangle from "./Triangle"
 
 export default function Header() {
   const { groups, fetchGroups } = useGroups()
@@ -34,12 +35,12 @@ export default function Header() {
           onPointerEnter={() => setGroupsOpen(true)}
           onPointerLeave={() => setGroupsOpen(false)}
         >
-          <a
+          <Link
             onPointerDown={() => setGroupsOpen(v => !v)} 
-            className={`${baseClass} cursor-pointer ${selected === "group" ? selectedClass : ""}`}
+            className={`${baseClass} flex gap-2 items-center ${selected === "group" ? selectedClass : ""}`}
           >
-            Grupper
-          </a>
+            Grupper <Triangle oriantation={groupsOpen ? "up" : "down"} className="border-8" />
+          </Link>
           {groupsOpen &&
             <div className="absolute left-0 top-full flex flex-col min-w-full bg-white rounded-md border-slate-100 border-[.075rem] shadow-md isolate overflow-hidden z-50">
               {groups && groups.map(({ groupId }) => (

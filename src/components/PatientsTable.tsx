@@ -43,11 +43,16 @@ export type PatientsTableProps = {
 }
 
 export default function PatientsTable({ patients, loading, error, className }: PatientsTableProps) {
+  const mappedPatients = useMemo(() => patients.map(p => ({
+    ...p,
+    displayArrivalDate: formatDisplayDate(p.arrivalDate)
+  })), [patients])
+
   const [view, setView] = useState<PatientVisitState>("present")
   const [page, setPage] = useState(1)
   const [orderBy, setOrderBy] = useState<OrderBy>("name")
   const [order, setOrder] = useState<Order>("asc")
-  const [searchedPatients, setSearchedPatients] = useState(patients)
+  const [searchedPatients, setSearchedPatients] = useState(mappedPatients)
 
   // Order by selector
   function selectOrderBy(newOrderBy: OrderBy) {
@@ -65,8 +70,8 @@ export default function PatientsTable({ patients, loading, error, className }: P
   }
 
   // Search handler
-  function handleSearch(patients: Patient[]) {
-    setSearchedPatients(patients)
+  function handleSearch(result: (Patient & { displayArrivalDate: string })[]) {
+    setSearchedPatients(result)
     setPage(1)
   }
 
@@ -159,7 +164,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
       <AddPatientDialog />
       <SearchBox
         placeholder="Søk etter pasient..."
-        items={patients}
+        items={mappedPatients}
         defaultSearchKey="firstName"
         searchKeys={[
           {
@@ -171,7 +176,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
             label: "Fornavn",
           },
           {
-            key: "arrivalDate",
+            key: "displayArrivalDate",
             label: "Ankomst",
           }, 
           {
@@ -227,7 +232,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
             <TableRow key={patient.patientId}>
               <TableCell>{patient.patientId}</TableCell>
               <TableCell>{patient.firstName}</TableCell>
-              <TableCell>{formatDisplayDate(patient.arrivalDate)}</TableCell>
+              <TableCell>{patient.displayArrivalDate}</TableCell>
               <TableCell>
                 <Link 
                   to={`/groups/${patient.groupId}` as "groups/$groupId"}
@@ -263,7 +268,9 @@ function PaginationBar({
   totalItems: number,
   setPage(setter: number | ((page: number) => void)): void
 }) {
-  const maxPage = Math.floor(totalItems / pageSize) + 1
+  const maxPage = Math.floor(totalItems / pageSize) + Number(totalItems % 10 !== 0)
+  const startItemNr = pageSize * (page - 1) + 1
+  const endItemNr = Math.min(totalItems, pageSize * (page - 1) + pageSize)
   
   const pageWindow = [
     (Math.max(1, page === 1 ? 1 : page === maxPage ? page - 2 : page - 1)),
@@ -302,7 +309,7 @@ function PaginationBar({
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      <p className="text-slate-500">{pageSize * (page - 1) + 1}-{Math.min(totalItems, pageSize * (page - 1) + pageSize)} av {totalItems}</p>
+      <p className="text-slate-500">{Math.min(totalItems, startItemNr)}{endItemNr > startItemNr ? `-${endItemNr}` : null} av {totalItems}</p>
     </div>
   )
 }

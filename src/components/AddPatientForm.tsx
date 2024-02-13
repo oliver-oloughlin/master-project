@@ -85,28 +85,31 @@ export default function AddPatientForm() {
           defaultSearchKey="firstName"
           onInput={setSearchedExternalPatients}
         />
-        <div className="overflow-y-auto max-h-80">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>PasientID</TableHead>
-                <TableHead>Fornavn</TableHead>
-                <TableHead>Ankomst</TableHead>
-                <TableHead>Gruppe</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {searchedExternalPatients.map(ep => (
-                <TableRow>
-                  <TableCell>{ep.patientId}</TableCell>
-                  <TableCell>{ep.firstName}</TableCell>
-                  <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
-                  <TableCell>{ep.groupId}</TableCell>
-                  <TableCell><Button onPointerDown={() => setExternalPatient(ep)}>Velg</Button></TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="overflow-y-auto h-80">
+          {externalPatients.length > 0 
+            ? <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>PasientID</TableHead>
+                    <TableHead>Fornavn</TableHead>
+                    <TableHead>Ankomst</TableHead>
+                    <TableHead>Gruppe</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {searchedExternalPatients.map(ep => (
+                    <TableRow>
+                      <TableCell>{ep.patientId}</TableCell>
+                      <TableCell>{ep.firstName}</TableCell>
+                      <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
+                      <TableCell>{ep.groupId}</TableCell>
+                      <TableCell><Button onPointerDown={() => setExternalPatient(ep)}>Velg</Button></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table> 
+            : <p>Kunne ikke laste inn eksterne pasienter</p>
+          }
         </div>
       </div>
       <Form {...form}>

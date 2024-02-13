@@ -6,11 +6,17 @@ import UserAvatar from "./UserAvatar"
 export default function CognitoUserButton() {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="rounded-full">
         <UserAvatar />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <Button variant="ghost" onClick={() => Auth.signOut()}>Logg ut</Button>
+        <Button 
+          variant="ghost" 
+          className="w-full text-center" 
+          onClick={() => Auth.signOut()}
+        >
+          Logg ut
+        </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   )
