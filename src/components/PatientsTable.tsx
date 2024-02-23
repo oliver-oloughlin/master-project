@@ -39,10 +39,11 @@ export type PatientsTableProps = {
   patients: Patient[]
   loading: boolean
   error: unknown
+  groupId?: string
   className?: string
 }
 
-export default function PatientsTable({ patients, loading, error, className }: PatientsTableProps) {
+export default function PatientsTable({ patients, loading, error, groupId, className }: PatientsTableProps) {
   const mappedPatients = useMemo(() => patients.map(p => ({
     ...p,
     displayArrivalDate: formatDisplayDate(p.arrivalDate)
@@ -161,7 +162,7 @@ export default function PatientsTable({ patients, loading, error, className }: P
           Kommende
         </Button>
       </span>
-      <AddPatientDialog />
+      <AddPatientDialog groupId={groupId} />
       <SearchBox
         placeholder="Søk etter pasient..."
         items={mappedPatients}

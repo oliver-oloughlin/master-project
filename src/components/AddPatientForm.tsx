@@ -7,24 +7,37 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form"
 import { Input } from "./ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { Button } from "./ui/button"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { usePatients } from "#/stores/patients.store"
 import { useExternalPatients } from "#/stores/external_patients.store"
 import SearchBox from "./SearchBox"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
-import { ExternalPatient } from "#/models/external_patient"
 
-export default function AddPatientForm() {
+export type AddPatientFormProps = {
+  groupId?: string
+}
+
+export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   const { groups } = useGroups()
   const { addPatient } = usePatients()
-  const { externalPatients, fetchExternalPatients } = useExternalPatients()
-  const [searchedExternalPatients, setSearchedExternalPatients] = useState(externalPatients)
+  const { externalPatients, fetchExternalPatients } = useExternalPatients(groupId)
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">("unsaved")
 
+  const mappedExternalPatients = useMemo(() => {
+    return externalPatients.map(p => ({
+      ...p,
+      displayArrivalDate: formatDisplayDate(p.arrivalDate)
+    }))
+  }, [externalPatients])
+
+  const [searchedExternalPatients, setSearchedExternalPatients] = useState(mappedExternalPatients)
+
+  // Load external patients
   useEffect(() => {
     fetchExternalPatients()
   }, [fetchExternalPatients])
 
+  // Create form schema
   const AddPatientSchema = z.object({
     patientId: z.string().regex(/^\d+$/),
     firstName: z.string().min(1),
@@ -33,11 +46,13 @@ export default function AddPatientForm() {
     departureDate: z.string(),
   })
 
+  // Create form
   const form = useForm<z.infer<typeof AddPatientSchema>>({
     resolver: zodResolver(AddPatientSchema),
   })
 
-  function setExternalPatient(patient: ExternalPatient) {
+  // Set form valeus when selecting external patient
+  function setExternalPatient(patient: typeof mappedExternalPatients[0]) {
     form.setValue("patientId", patient.patientId)
     form.setValue("firstName", patient.firstName)
     form.setValue("arrivalDate", formatDateInputValue(patient.arrivalDate))
@@ -45,8 +60,8 @@ export default function AddPatientForm() {
     form.setValue("departureDate", formatDateInputValue(
       patient.departureDate 
         ? patient.departureDate 
-        : new Date(new Date(patient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000))
-    )
+        : new Date(new Date(patient.arrivalDate).valueOf() + 21 * 24 * 60 * 60 * 1000)
+    ))
   }
 
   async function handleSubmit(values: z.infer<typeof AddPatientSchema>) {
@@ -67,7 +82,7 @@ export default function AddPatientForm() {
     <div className="grid gap-4">
       <div className="grid gap-1">
         <SearchBox 
-          items={externalPatients} 
+          items={mappedExternalPatients} 
           searchKeys={[
             {
               key: "patientId",
@@ -80,6 +95,10 @@ export default function AddPatientForm() {
             {
               key: "groupId",
               label: "Gruppe",
+            },
+            {
+              key: "displayArrivalDate",
+              label: "Ankomst"
             }
           ]}
           defaultSearchKey="firstName"

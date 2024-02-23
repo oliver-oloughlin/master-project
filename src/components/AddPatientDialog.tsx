@@ -1,7 +1,11 @@
 import AddPatientForm from "./AddPatientForm"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 
-export default function AddPatientDialog() {
+export type AddPatientDialogProps = {
+  groupId?: string
+}
+
+export default function AddPatientDialog({ groupId }: AddPatientDialogProps) {
   return (
     <Dialog>
       <DialogTrigger 
@@ -13,7 +17,7 @@ export default function AddPatientDialog() {
         <DialogHeader>
           <DialogTitle>Legg til pasient</DialogTitle>
         </DialogHeader>
-        <AddPatientForm />
+        <AddPatientForm groupId={groupId} />
       </DialogContent>
     </Dialog>
   )

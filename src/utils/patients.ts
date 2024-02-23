@@ -5,6 +5,8 @@ export type ScoreTimestamp = {
   timestamp: string
 }
 
+export type PatientStatus = "arriving" | "present" | "departed"
+
 export function patientScoresByActivity(patient: Patient) {
   const activityScoresMap = new Map<string, ScoreTimestamp[]>()
 
@@ -20,4 +22,11 @@ export function patientScoresByActivity(patient: Patient) {
   })
 
   return activityScoresMap
+}
+
+export function patientStatus(patient: Patient): PatientStatus {
+  const arrival = new Date(patient.arrivalDate).valueOf()
+  const departure = patient.departureDate ? new Date(patient.departureDate).valueOf() : arrival.valueOf() + 1000 * 60 * 60 * 24 * 7 * 3
+  const now = Date.now()
+  return arrival > now ? "arriving" : departure < now ? "departed" : "present"
 }
