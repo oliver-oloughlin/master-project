@@ -4,6 +4,8 @@ import { useMemo, useState } from "react"
 import { Button } from "./ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { PatientStatus, patientStatus } from "#/utils/patients"
+import { twMerge } from "tailwind-merge"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 
 export type GroupRatingsTableProps = {
   patients: Patient[]
@@ -24,6 +26,7 @@ export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) 
   }, [patients, view])
 
   const activityScoresCountMap = new Map<string, Map<number, number>>()
+  const averageAcitvityScores = new Map<string, number>()
 
   latestRatings.forEach(rating => {
     rating.scores.forEach(score => {
@@ -34,13 +37,18 @@ export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) 
     })
   })
 
-  function sortByScore(a: number, b: number) {
-    return a - b
-  }
+  activityScoresCountMap.forEach((scoresCountMap, activity) => {
+    let scoreSum = 0
+    scoresCountMap.forEach((scoreCount, score) => {
+      scoreSum += scoreCount * score
+    })
+    const averageScore = Math.round(scoreSum / latestRatings.length)
+    averageAcitvityScores.set(activity, averageScore)
+  })
 
   return (
     <div className="grid gap-4">
-      <h2 className="text-center text-2xl">Antall Svar</h2>
+      <h2 className="text-center text-2xl">Gruppesvar</h2>
       <span className="flex gap-2 justify-center">
         <Button
           variant="ghost"
@@ -61,23 +69,74 @@ export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) 
         <TableHeader>
           <TableRow className="!bg-slate-100">
             <TableHead className="font-bold">Aktivitet</TableHead>
-            {Array.from(ScoreMap.entries()).sort(([a], [b]) => sortByScore(a, b)).map(([_, scoreStr]) => <TableHead className="font-bold">{scoreStr}</TableHead>)}
+            <TableHead className="font-bold">Gjennomsnittlig svar</TableHead>
+            <TableHead />
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from(activityScoresCountMap).map(([activity, scoresCountMap]) => (
-            <TableRow className="even:!bg-slate-100 odd:!bg-transparent" data-row-xxxxxxxxxx>
+          {Array.from(averageAcitvityScores).map(([activity, averageScore]) => (
+            <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
               <TableCell>{activity}</TableCell>
-              {Array.from(scoresCountMap.entries())
-                .sort(([a], [b]) => sortByScore(a, b))
-                .map(([_, count]) => (
-                  <TableCell>{count}</TableCell>
-              ))}
-              {Array.from(ScoreMap.values()).slice(0, ScoreMap.size - scoresCountMap.size).map(() => <TableCell>0</TableCell>)}
+              <TableCell>
+                <span className={twMerge("px-4 py-2 rounded-full", averageScore > 4 
+                  ? "bg-emerald-100"
+                  : averageScore > 3
+                  ? "bg-lime-100"
+                  : averageScore > 2
+                  ? "bg-yellow-100"
+                  : averageScore > 1
+                  ? "bg-orange-100"
+                  : "bg-red-100")}
+                >
+                  {ScoreMap.get(averageScore)}
+                </span>
+              </TableCell>
+              <TableCell>
+                <ActivityScoreDistributionDialog 
+                  activity={activity} 
+                  scoresCountMap={activityScoresCountMap.get(activity) ?? new Map()}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </div>
+  )
+}
+
+function ActivityScoreDistributionDialog({ 
+  scoresCountMap,
+  activity,
+}: { 
+  scoresCountMap: Map<number, number>
+  activity: string
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger className="bg-[--bg-adfectus] hover:bg-cyan-600 !text-slate-50 rounded-md px-4 py-2">Se fordeling</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Fordeling - {activity}</DialogTitle>
+          <DialogDescription>Antall pasienter som har svart for hver kategori</DialogDescription>
+        </DialogHeader>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Svar</TableHead>
+              <TableHead>Antall</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from(scoresCountMap.entries()).map(([score, count]) => (
+              <TableRow>
+                <TableCell>{ScoreMap.get(score)}</TableCell>
+                <TableCell>{count}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </DialogContent>
+    </Dialog>
   )
 }

@@ -16,7 +16,7 @@ export type EditPatientDialogProps = {
 export default function EditPatientDialog({ patient }: EditPatientDialogProps) {
   return (
     <Dialog>
-      <DialogTrigger className="bg-slate-700 hover:bg-slate-900 rounded-md px-4 py-2 text-slate-100 hover:text-white">Rediger</DialogTrigger>
+      <DialogTrigger className="bg-slate-700 hover:bg-slate-900 rounded-md px-4 py-2 text-slate-50">Rediger</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Rediger Pasient</DialogTitle>

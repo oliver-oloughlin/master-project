@@ -14,7 +14,7 @@ export default function Groups() {
   }, [fetchGroup])
 
   return (
-    <div className="m-auto w-[min(100%,120ch)] items-center p-6 grid gap-6">
+    <div className="m-auto w-[min(100%,100ch)] items-center p-6 grid gap-6">
       <h1 className="text-slate-700 text-3xl font-bold text-center">Gruppe {groupId}</h1>
       <PatientsTable 
         patients={patients} 
