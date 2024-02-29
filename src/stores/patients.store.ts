@@ -1,5 +1,10 @@
 import { createLoaderStore } from "./_loader"
-import { getPatients, getPatientById, updatePatientById, addPatient as _addPatient } from "#/services/patients.service"
+import {
+  getPatients,
+  getPatientById,
+  updatePatientById,
+  addPatient as _addPatient,
+} from "#/services/patients.service"
 import { Patient } from "#/models/patient"
 
 const usePatientsLoader = createLoaderStore(getPatients)
@@ -9,22 +14,25 @@ export const usePatients = () => {
 
   /**
    * Get a patient by id
-   * 
-   * @param patientId 
-   * @returns 
+   *
+   * @param patientId
+   * @returns
    */
   function getPatient(patientId: string) {
-    return data?.find(p => p.patientId === patientId) ?? null
+    return data?.find((p) => p.patientId === patientId) ?? null
   }
 
   /**
    * Update a patient by id
-   * 
-   * @param patientId 
-   * @param patientData 
-   * @returns 
+   *
+   * @param patientId
+   * @param patientData
+   * @returns
    */
-  async function updatePatient(patientId: string, patientData: Partial<Patient>) {
+  async function updatePatient(
+    patientId: string,
+    patientData: Partial<Patient>,
+  ) {
     const success = await updatePatientById(patientId, patientData)
     if (!success) {
       return success
@@ -35,8 +43,8 @@ export const usePatients = () => {
       return success
     }
 
-    mutate(data => {
-      const index = data?.findIndex(p => p.patientId === patientId)
+    mutate((data) => {
+      const index = data?.findIndex((p) => p.patientId === patientId)
       if (!index) {
         return data
       }
@@ -49,14 +57,18 @@ export const usePatients = () => {
 
   /**
    * Add a new patient
-   * 
-   * @param patient 
-   * @returns 
+   *
+   * @param patient
+   * @returns
    */
   async function addPatient(patient: Patient) {
     const success = await _addPatient(patient)
     if (success) {
-      mutate(data => data.some(p => p.patientId === patient.patientId) ? [...data] : [...data, patient])
+      mutate((data) =>
+        data.some((p) => p.patientId === patient.patientId)
+          ? [...data]
+          : [...data, patient],
+      )
     }
     return success
   }

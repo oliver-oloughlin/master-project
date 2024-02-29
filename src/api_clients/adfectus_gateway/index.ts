@@ -12,13 +12,13 @@ export const adfectusGatewayApiClient = client({
         post: {
           bodySchema: UserSchema,
           headersSchema: z.object({
-            Authorization: z.string()
+            Authorization: z.string(),
           }),
           searchParamsSchema: z.object({
-            vendor: z.enum(["adfectus"])
-          })
-        }
-      }
-    })
-  }
+            vendor: z.enum(["adfectus"]),
+          }),
+        },
+      },
+    }),
+  },
 })

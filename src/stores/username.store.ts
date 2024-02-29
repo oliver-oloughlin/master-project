@@ -9,6 +9,6 @@ export const useUsername = () => {
     username: data,
     loading,
     error,
-    fetchUsername: fetch
+    fetchUsername: fetch,
   }
 }

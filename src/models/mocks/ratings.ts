@@ -26,10 +26,13 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
 
   const arrivalDate = new Date(patient.arrivalDate)
 
-  const departureDate = patient.departureDate 
-    ? new Date(patient.departureDate) 
-    : new Date(arrivalDate.valueOf() + DEFAULT_PATIENT_STAY_DURATION_DAYS * 24 * 60 * 60 * 1_000)
-  
+  const departureDate = patient.departureDate
+    ? new Date(patient.departureDate)
+    : new Date(
+        arrivalDate.valueOf() +
+          DEFAULT_PATIENT_STAY_DURATION_DAYS * 24 * 60 * 60 * 1_000,
+      )
+
   const statuses = new Set(Object.values(StatusSchema.Values))
 
   if (arrivalDate.valueOf() > Date.now()) {
@@ -45,22 +48,25 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
   for (const status of statuses) {
     const n = status === "during" ? 3 : 1
     for (let i = 0; i < n; i++) {
-      const scores: Score[] = activities.map(activity => ({
+      const scores: Score[] = activities.map((activity) => ({
         activity,
-        score: scoreValues[Math.floor(Math.random() * scoreValues.length)]
+        score: scoreValues[Math.floor(Math.random() * scoreValues.length)],
       }))
 
-      const arrivalDepartureDIff = (departureDate.valueOf() - arrivalDate.valueOf())
+      const arrivalDepartureDIff =
+        departureDate.valueOf() - arrivalDate.valueOf()
 
-      const timestampDate = status === "before" 
-        ? new Date(arrivalDate.valueOf() - 7 * 24 * 60 * 60 * 1_000)
-        : status === "mid"
-        ? new Date(arrivalDate.valueOf() + arrivalDepartureDIff / 2)
-        : status === "final"
-        ? departureDate
-        : new Date(arrivalDate.valueOf() + Math.random() * arrivalDepartureDIff)
+      const timestampDate =
+        status === "before"
+          ? new Date(arrivalDate.valueOf() - 7 * 24 * 60 * 60 * 1_000)
+          : status === "mid"
+            ? new Date(arrivalDate.valueOf() + arrivalDepartureDIff / 2)
+            : status === "final"
+              ? departureDate
+              : new Date(
+                  arrivalDate.valueOf() + Math.random() * arrivalDepartureDIff,
+                )
 
-  
       ratings.push({
         patientId: patient.patientId,
         scores,

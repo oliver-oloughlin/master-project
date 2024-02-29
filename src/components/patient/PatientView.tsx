@@ -12,12 +12,12 @@ export default function PatientView({ patient }: PatientViewProps) {
       {patient.avatarUrl && <img src={patient.avatarUrl} />}
       <div>
         <h2 className="text-center text-2xl">Nyeste svar</h2>
-        <br/>
+        <br />
         <PatientRatingsTable patient={patient} />
       </div>
       <div>
         <h2 className="text-center text-2xl">Utvikling</h2>
-        <br/>
+        <br />
         <PatientProgressChart patient={patient} />
       </div>
     </div>

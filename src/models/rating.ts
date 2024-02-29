@@ -19,7 +19,7 @@ export const ScoreMap = new Map([
   [2, "Ikke Gøy"],
   [3, "Vet Ikke"],
   [4, "Litt Gøy"],
-  [5, "Veldig Gøy"]
+  [5, "Veldig Gøy"],
 ])
 
 export type Status = z.infer<typeof StatusSchema>

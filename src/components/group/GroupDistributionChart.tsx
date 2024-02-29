@@ -2,20 +2,24 @@ import { ScoreMap } from "#/models/rating"
 import Bar from "../charts/Bar"
 
 export default function GroupDistributionChart({
-  scoresCountMap
+  scoresCountMap,
 }: {
   scoresCountMap: Map<number, number>
 }) {
   const colors = ["#fecaca", "#fed7aa", "#fef08a", "#d9f99d", "#a7f3d0"]
-  const sortedEntries = Array.from(scoresCountMap.entries()).sort(([a], [b]) => a - b)
+  const sortedEntries = Array.from(scoresCountMap.entries()).sort(
+    ([a], [b]) => a - b,
+  )
   return (
     <Bar
       data={{
         labels: sortedEntries.map(([score]) => ScoreMap.get(score)),
-        datasets: [{
-          backgroundColor: sortedEntries.map(([score]) => colors[score - 1]),
-          data: sortedEntries.map(([_, count]) => count)
-        }]
+        datasets: [
+          {
+            backgroundColor: sortedEntries.map(([score]) => colors[score - 1]),
+            data: sortedEntries.map(([_, count]) => count),
+          },
+        ],
       }}
       options={{
         responsive: true,
@@ -23,29 +27,29 @@ export default function GroupDistributionChart({
           x: {
             grid: {
               display: false,
-            }
+            },
           },
           y: {
             title: {
               display: true,
-              text: "Antall"
+              text: "Antall",
             },
             grid: {
               display: false,
             },
             ticks: {
-              stepSize: 1
-            }
-          }
+              stepSize: 1,
+            },
+          },
         },
         plugins: {
           legend: {
-            display: false
+            display: false,
           },
           datalabels: {
             display: true,
-          }
-        }
+          },
+        },
       }}
     />
   )

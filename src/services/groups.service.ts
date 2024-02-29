@@ -9,13 +9,13 @@ export async function getGroups() {
 
 export async function getGroup(groupId: string) {
   await sleep(350)
-  
-  const group = mockGroups.find(g => g.groupId === groupId)
+
+  const group = mockGroups.find((g) => g.groupId === groupId)
   if (!group) {
     return null
   }
 
-  const patients = mockPatients.filter(p => p.groupId === groupId)
+  const patients = mockPatients.filter((p) => p.groupId === groupId)
   return {
     ...group,
     patients,

@@ -18,6 +18,6 @@ export function mapFromUserToPatient(user: User): Patient {
     arrivalDate: user.arrivalDate,
     groupId: user.groupId,
     instId: user.instId,
-    ratings: []
+    ratings: [],
   }
 }

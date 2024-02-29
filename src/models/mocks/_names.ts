@@ -109,7 +109,7 @@ const nameSet = new Set([
   "Adam",
   "Jonas",
   "Tor",
-  "Odin"
+  "Odin",
 ])
 
 export const names = Array.from(nameSet)

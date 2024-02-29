@@ -7,7 +7,7 @@ const useGroupLoader = createLoaderStore(getGroup)
 export const useGroup = (groupId: string) => {
   const { data, fetch, loading, error } = useGroupLoader()
   const fetchGroup = useCallback(() => fetch(groupId), [fetch, groupId])
-  return { 
+  return {
     group: data,
     loading,
     error,

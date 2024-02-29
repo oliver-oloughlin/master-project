@@ -17,7 +17,7 @@ for (let i = 0; i < 300; i++) {
     arrivalDate,
     groupId,
     instId: "BS",
-    patientId: (Math.round(Math.random() * 1_000_000)).toString(),
+    patientId: Math.round(Math.random() * 1_000_000).toString(),
   }
 
   mockExternalPatients.push({

@@ -9,6 +9,6 @@ export const useGroups = () => {
     groups: data ?? [],
     loading,
     error,
-    fetchGroups: fetch
+    fetchGroups: fetch,
   }
 }

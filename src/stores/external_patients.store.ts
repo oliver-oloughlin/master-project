@@ -7,7 +7,10 @@ const useExternalPatientsLoader = createLoaderStore(getExternalPatients)
 export const useExternalPatients = (groupId?: string) => {
   const { data, loading, error, fetch } = useExternalPatientsLoader()
 
-  const fetchExternalPatients = useCallback(() => fetch(groupId), [fetch, groupId])
+  const fetchExternalPatients = useCallback(
+    () => fetch(groupId),
+    [fetch, groupId],
+  )
 
   return {
     externalPatients: data ?? [],

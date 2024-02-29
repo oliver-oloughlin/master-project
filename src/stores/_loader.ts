@@ -8,7 +8,9 @@ export type LoaderStore<TArgs extends unknown[], TData> = {
   mutate(fn: (data: TData) => TData): void
 }
 
-export function createLoaderStore<const TArgs extends unknown[], const TData>(fetcher: (...args: TArgs) => TData | Promise<TData>) {
+export function createLoaderStore<const TArgs extends unknown[], const TData>(
+  fetcher: (...args: TArgs) => TData | Promise<TData>,
+) {
   return create<LoaderStore<TArgs, Awaited<TData>>>((set, get) => ({
     data: null,
     loading: false,
@@ -28,12 +30,12 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(fe
         if (!data) {
           return
         }
-        
+
         set({ data: fn(data) })
       } catch (error) {
         console.error(error)
         set({ error })
       }
-    }
+    },
   }))
 }

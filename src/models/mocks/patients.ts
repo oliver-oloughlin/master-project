@@ -18,12 +18,12 @@ for (let i = 0; i < 300; i++) {
     arrivalDate,
     groupId,
     instId: "BS",
-    patientId: (Math.round(Math.random() * 1_000_000)).toString(),
-    avatarUrl: "/patient_avatar.png"
+    patientId: Math.round(Math.random() * 1_000_000).toString(),
+    avatarUrl: "/patient_avatar.png",
   }
 
   mockPatients.push({
     ...patient,
-    ratings: mockRatings(patient)
+    ratings: mockRatings(patient),
   })
 }

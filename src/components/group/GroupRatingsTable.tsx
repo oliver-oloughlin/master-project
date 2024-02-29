@@ -1,8 +1,19 @@
 import { Patient } from "#/models/patient"
 import { useMemo, useState } from "react"
 import { Button } from "../ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
-import { PatientStatus, averageScoresAndCount, patientStatus } from "#/utils/patients"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table"
+import {
+  PatientStatus,
+  averageScoresAndCount,
+  patientStatus,
+} from "#/utils/patients"
 import Score from "../utils/Score"
 import GroupActivityScoreDistributionDialog from "./GroupActivityScoreDistributionDialog"
 
@@ -10,24 +21,29 @@ export type GroupRatingsTableProps = {
   patients: Patient[]
 }
 
-export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) {
+export default function GroupRatingsTable({
+  patients,
+}: GroupRatingsTableProps) {
   const [view, setView] = useState<PatientStatus>("present")
 
   const latestRatings = useMemo(() => {
     return patients
-      .filter(patient => patientStatus(patient) === view)
+      .filter((patient) => patientStatus(patient) === view)
       .map(
-        patient => patient.ratings
-          .sort((a, b) => new Date(a.timestamp).valueOf() - new Date(b.timestamp).valueOf())
-          .at(0)!
+        (patient) =>
+          patient.ratings
+            .sort(
+              (a, b) =>
+                new Date(a.timestamp).valueOf() -
+                new Date(b.timestamp).valueOf(),
+            )
+            .at(0)!,
       )
-      .filter(activity => !!activity)
+      .filter((activity) => !!activity)
   }, [patients, view])
 
-  const { 
-    averageAcitvityScoresMap, 
-    activityScoresCountMap,
-  } = averageScoresAndCount(latestRatings)
+  const { averageAcitvityScoresMap, activityScoresCountMap } =
+    averageScoresAndCount(latestRatings)
 
   return (
     <div className="grid gap-4">
@@ -58,7 +74,8 @@ export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) 
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from(averageAcitvityScoresMap).map(([activity, averageScore]) => (
+          {Array.from(averageAcitvityScoresMap).map(
+            ([activity, averageScore]) => (
               <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
                 <TableCell>{activity}</TableCell>
                 <TableCell>
@@ -66,12 +83,15 @@ export default function GroupRatingsTable({ patients }: GroupRatingsTableProps) 
                 </TableCell>
                 <TableCell>
                   <GroupActivityScoreDistributionDialog
-                    activity={activity} 
-                    scoresCountMap={activityScoresCountMap.get(activity) ?? new Map()}
+                    activity={activity}
+                    scoresCountMap={
+                      activityScoresCountMap.get(activity) ?? new Map()
+                    }
                   />
                 </TableCell>
               </TableRow>
-            ))}
+            ),
+          )}
         </TableBody>
       </Table>
     </div>

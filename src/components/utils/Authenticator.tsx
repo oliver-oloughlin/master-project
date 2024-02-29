@@ -10,10 +10,14 @@ Amplify.configure({
     region: "eu-north-1",
     userPoolId: "eu-north-1_2w3kj3qL2",
     userPoolWebClientId: "138vl5vhd6v3k8g3u3qjamhcur",
-  }
+  },
 })
 
-export default function OuterAuthenticator({ children }: { children?: React.ReactNode }) {
+export default function OuterAuthenticator({
+  children,
+}: {
+  children?: React.ReactNode
+}) {
   const { username, fetchUsername } = useUsername()
 
   useEffect(() => {
@@ -28,9 +32,9 @@ export default function OuterAuthenticator({ children }: { children?: React.Reac
         signIn: {
           username: {
             defaultValue: username ?? undefined,
-            isReadOnly: !!username
-          }
-        }
+            isReadOnly: !!username,
+          },
+        },
       }}
     >
       {children}

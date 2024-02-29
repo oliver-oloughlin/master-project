@@ -9,10 +9,12 @@ export default function IndexRoute() {
     fetchPatients()
   }, [fetchPatients])
 
-  return <PatientsTable 
-    patients={patients} 
-    loading={loading} 
-    error={error} 
-    className="m-auto" 
-  />
+  return (
+    <PatientsTable
+      patients={patients}
+      loading={loading}
+      error={error}
+      className="m-auto"
+    />
+  )
 }
