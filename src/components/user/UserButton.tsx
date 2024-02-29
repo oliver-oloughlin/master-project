@@ -1,6 +1,6 @@
 import { Auth } from "aws-amplify"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Button } from "./ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu"
+import { Button } from "../ui/button"
 import UserAvatar from "./UserAvatar"
 
 export default function CognitoUserButton() {

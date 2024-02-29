@@ -1,4 +1,4 @@
-import PatientsTable from "#/components/PatientsTable"
+import PatientsTable from "#/components/patient/PatientsTable"
 import { usePatients } from "#/stores/patients.store"
 import { useEffect } from "react"
 

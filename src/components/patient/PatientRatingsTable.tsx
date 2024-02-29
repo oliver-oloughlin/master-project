@@ -1,7 +1,7 @@
 import { Patient } from "#/models/patient"
-import { ScoreMap } from "#/models/rating"
 import { formatDisplayDate } from "#/utils/formatters"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import Score from "../utils/Score"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 
 export type PatientRatingsTableProps = {
   patient: Patient
@@ -31,7 +31,7 @@ export default function PatientRatingsTable({ patient }: PatientRatingsTableProp
             {scores?.map(score => (
               <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
                 <TableCell>{score.activity}</TableCell>
-                <TableCell>{ScoreMap.get(score.score)}</TableCell>
+                <TableCell><Score>{score.score}</Score></TableCell>
               </TableRow>
             ))}
           </TableBody>

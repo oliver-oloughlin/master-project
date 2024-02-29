@@ -36,9 +36,9 @@ export function scoresByActivity(ratings: RatingData[]): ActivityRatingMap {
   return activityScoresMap
 }
 
-export function averageScores(ratings: RatingData[]) {
+export function averageScoresAndCount(ratings: RatingData[]) {
   const activityScoresCountMap = new Map<string, Map<number, number>>()
-  const averageAcitvityScores = new Map<string, number>()
+  const averageAcitvityScoresMap = new Map<string, { score: number, count: number }>()
 
   ratings.forEach(rating => {
     rating.scores.forEach(score => {
@@ -54,11 +54,19 @@ export function averageScores(ratings: RatingData[]) {
     scoresCountMap.forEach((scoreCount, score) => {
       scoreSum += scoreCount * score
     })
+    
     const averageScore = Math.round(scoreSum / ratings.length)
-    averageAcitvityScores.set(activity, averageScore)
+
+    averageAcitvityScoresMap.set(activity, {
+      score: averageScore,
+      count: scoresCountMap.size,
+    })
   })
 
-  return averageAcitvityScores
+  return {
+    activityScoresCountMap,
+    averageAcitvityScoresMap,
+  }
 }
 
 export function dailyAverageScoresByWeeklyWindow(ratings: RatingData[], start: Date, end: Date) {
@@ -80,12 +88,12 @@ export function dailyAverageScoresByWeeklyWindow(ratings: RatingData[], start: D
       return timestamp >= from && timestamp <= to
     })
 
-    const avgScores = averageScores(windowRatings)
+    const { averageAcitvityScoresMap } = averageScoresAndCount(windowRatings)
 
-    avgScores.forEach((avgScore, activity) => {
+    averageAcitvityScoresMap.forEach((avgScore, activity) => {
       const activityAvgScores = dailyAverageScoresByAcitivty.get(activity) ?? []
       activityAvgScores.push({
-        score: avgScore,
+        score: avgScore.score,
         timestamp: new Date(current).toISOString()
       })
       dailyAverageScoresByAcitivty.set(activity, activityAvgScores)

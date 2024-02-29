@@ -1,6 +1,6 @@
 import { groupRoute } from "#/Router"
-import GroupRatingsTable from "#/components/GroupRatingsTable"
-import PatientsTable from "#/components/PatientsTable"
+import GroupRatingsTable from "#/components/group/GroupRatingsTable"
+import PatientsTable from "#/components/patient/PatientsTable"
 import { useGroup } from "#/stores/group.store"
 import { useEffect } from "react"
 

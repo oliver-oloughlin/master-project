@@ -1,5 +1,5 @@
 import AddPatientForm from "./AddPatientForm"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog"
 
 export type AddPatientDialogProps = {
   groupId?: string

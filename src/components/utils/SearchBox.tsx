@@ -1,6 +1,6 @@
 import { HTMLAttributes, useEffect, useState } from "react"
-import { Input } from "./ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { Input } from "../ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select"
 import { twMerge } from "tailwind-merge"
 import fuzzysort from "fuzzysort"
 

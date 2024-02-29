@@ -4,8 +4,8 @@ import { dailyAverageScoresByWeeklyWindow, scoresByActivity } from "#/utils/pati
 import { ScoreMap } from "#/models/rating"
 import { useEffect, useMemo, useState } from "react"
 import { useGroup } from "#/stores/group.store"
-import { Skeleton } from "./ui/skeleton"
-import Repeat from "./Repeat"
+import { Skeleton } from "../ui/skeleton"
+import Repeat from "../utils/Repeat"
 
 export type PatientsProgressChartProps = {
   patient: Patient
@@ -127,7 +127,8 @@ export default function PatientProgressChart({ patient }: PatientsProgressChartP
               display: false,
             },
             ticks: {
-              autoSkipPadding: 64
+              autoSkipPadding: 64,
+              maxTicksLimit: patient.ratings.length
             }
           },
           y: {
