@@ -9,7 +9,7 @@ export type PatientRatingsTableProps = {
 
 export default function PatientRatingsTable({ patient }: PatientRatingsTableProps) {
   const rating = patient.ratings
-    .sort((a, b) => new Date(a.timestamp).valueOf() - new Date(b.timestamp).valueOf())
+    .sort((a, b) => new Date(b.timestamp).valueOf() - new Date(a.timestamp).valueOf())
     .at(0)
 
   const scores = rating?.scores
