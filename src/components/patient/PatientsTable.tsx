@@ -11,7 +11,6 @@ import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
-  PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
@@ -341,37 +340,27 @@ function PaginationBar({
     <div className="grid place-items-center gap-2">
       <Pagination>
         <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              className="cursor-pointer"
-              onPointerDown={() => setPage((p) => Math.max(1, p - 1))}
-            />
-          </PaginationItem>
+          <PaginationPrevious
+            className="cursor-pointer"
+            onPointerDown={() => setPage((p) => Math.max(1, p - 1))}
+          />
           {pageWindow.map((displayPage, index) => (
             <Fragment key={index}>
               {displayPage && (
-                <PaginationItem>
-                  <PaginationLink
-                    className={`cursor-pointer ${page === displayPage ? "border-slate-200 border-2" : ""}`}
-                    onPointerDown={() => setPage(displayPage)}
-                  >
-                    {displayPage}
-                  </PaginationLink>
-                </PaginationItem>
+                <PaginationLink
+                  className={`cursor-pointer ${page === displayPage ? "border-slate-200 border-2" : ""}`}
+                  onPointerDown={() => setPage(displayPage)}
+                >
+                  {displayPage}
+                </PaginationLink>
               )}
             </Fragment>
           ))}
-          {maxPage > 3 && page < maxPage - 1 && (
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          )}
-          <PaginationItem>
-            <PaginationNext
-              className="cursor-pointer"
-              onPointerDown={() => setPage((p) => Math.min(p + 1, maxPage))}
-            />
-          </PaginationItem>
+          {maxPage > 3 && page < maxPage - 1 && <PaginationEllipsis />}
+          <PaginationNext
+            className="cursor-pointer"
+            onPointerDown={() => setPage((p) => Math.min(p + 1, maxPage))}
+          />
         </PaginationContent>
       </Pagination>
       <p className="text-slate-500">

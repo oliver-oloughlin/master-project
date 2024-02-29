@@ -79,7 +79,10 @@ export default function GroupRatingsTable({
         </TableHeader>
         <TableBody>
           {sortedAvgScores.map(([activity, averageScore]) => (
-            <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
+            <TableRow
+              key={activity}
+              className="even:!bg-slate-100 odd:!bg-transparent"
+            >
               <TableCell>{activity}</TableCell>
               <TableCell>
                 <Score>{averageScore.score}</Score>

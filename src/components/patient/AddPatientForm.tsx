@@ -33,8 +33,10 @@ export type AddPatientFormProps = {
 export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   const { groups } = useGroups()
   const { addPatient } = usePatients()
+
   const { externalPatients, fetchExternalPatients } =
     useExternalPatients(groupId)
+
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">(
     "unsaved",
   )
@@ -47,7 +49,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   }, [externalPatients])
 
   const [searchedExternalPatients, setSearchedExternalPatients] = useState(
-    mappedExternalPatients,
+    mappedExternalPatients ?? [],
   )
 
   // Load external patients
@@ -143,7 +145,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
               </TableHeader>
               <TableBody>
                 {searchedExternalPatients.map((ep) => (
-                  <TableRow>
+                  <TableRow key={ep.patientId}>
                     <TableCell>{ep.patientId}</TableCell>
                     <TableCell>{ep.firstName}</TableCell>
                     <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
