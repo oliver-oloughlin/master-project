@@ -45,6 +45,10 @@ export default function GroupRatingsTable({
   const { averageAcitvityScoresMap, activityScoresCountMap } =
     averageScoresAndCount(latestRatings)
 
+  const sortedAvgScores = Array.from(averageAcitvityScoresMap.entries()).sort(
+    ([a], [b]) => a.localeCompare(b),
+  )
+
   return (
     <div className="grid gap-4">
       <h2 className="text-center text-2xl">Gruppesvar Gjennomsnitt</h2>
@@ -74,24 +78,22 @@ export default function GroupRatingsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from(averageAcitvityScoresMap).map(
-            ([activity, averageScore]) => (
-              <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
-                <TableCell>{activity}</TableCell>
-                <TableCell>
-                  <Score>{averageScore.score}</Score>
-                </TableCell>
-                <TableCell>
-                  <GroupActivityScoreDistributionDialog
-                    activity={activity}
-                    scoresCountMap={
-                      activityScoresCountMap.get(activity) ?? new Map()
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            ),
-          )}
+          {sortedAvgScores.map(([activity, averageScore]) => (
+            <TableRow className="even:!bg-slate-100 odd:!bg-transparent">
+              <TableCell>{activity}</TableCell>
+              <TableCell>
+                <Score>{averageScore.score}</Score>
+              </TableCell>
+              <TableCell>
+                <GroupActivityScoreDistributionDialog
+                  activity={activity}
+                  scoresCountMap={
+                    activityScoresCountMap.get(activity) ?? new Map()
+                  }
+                />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

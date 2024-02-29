@@ -171,6 +171,9 @@ export default function PatientProgressChart({
             onClick: (_, { text }) =>
               setActivity((act) => (text === GROUP_LABEL ? act : text)),
           },
+          datalabels: {
+            display: false,
+          },
         },
       }}
     />
