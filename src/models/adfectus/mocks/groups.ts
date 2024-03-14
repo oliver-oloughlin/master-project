@@ -1,6 +1,6 @@
-import type { Group } from "../group"
+import type { AdfectusGroup } from "../group"
 
-export const mockGroups: Group[] = [
+export const mockAdfectusGroups: AdfectusGroup[] = [
   {
     groupId: "2C",
     instId: "Beitostølen",

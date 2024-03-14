@@ -34,15 +34,14 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   const { groups } = useGroups()
   const { addPatient } = usePatients()
 
-  const { externalPatients, fetchExternalPatients } =
-    useExternalPatients(groupId)
+  const { data: externalPatients } = useExternalPatients(groupId)
 
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">(
     "unsaved",
   )
 
   const mappedExternalPatients = useMemo(() => {
-    return externalPatients.map((p) => ({
+    return (externalPatients ?? []).map((p) => ({
       ...p,
       displayArrivalDate: formatDisplayDate(p.arrivalDate),
     }))
@@ -51,11 +50,6 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   const [searchedExternalPatients, setSearchedExternalPatients] = useState(
     mappedExternalPatients ?? [],
   )
-
-  // Load external patients
-  useEffect(() => {
-    fetchExternalPatients()
-  }, [fetchExternalPatients])
 
   // Create form schema
   const AddPatientSchema = z.object({

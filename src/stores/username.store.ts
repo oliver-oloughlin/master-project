@@ -1,5 +1,5 @@
 import { createLoaderStore } from "./_loader"
-import { getUsername } from "#/services/users.service"
+import { getUsername } from "#/services/external/users.service"
 
 const useLoader = createLoaderStore(getUsername)
 

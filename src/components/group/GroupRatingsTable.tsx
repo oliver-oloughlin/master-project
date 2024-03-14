@@ -1,4 +1,4 @@
-import { Patient } from "#/models/patient"
+import { Patient } from "#/models/view/patient"
 import { useMemo, useState } from "react"
 import { Button } from "../ui/button"
 import {

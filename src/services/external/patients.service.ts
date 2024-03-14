@@ -1,5 +1,5 @@
-import { ExternalPatient } from "#/models/external_patient"
-import { mockExternalPatients } from "#/models/mocks/external_patients"
+import { ExternalPatient } from "#/models/external/patient"
+import { mockExternalPatients } from "#/models/external/mocks/patients"
 import { sleep } from "#/utils/sleep"
 
 export async function getExternalPatients(

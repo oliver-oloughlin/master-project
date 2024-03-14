@@ -1,5 +1,5 @@
 import { createLoaderStore } from "./_loader"
-import { getGroup } from "#/services/groups.service"
+import { getGroup } from "#/services/adfectus/groups.service"
 import { useCallback } from "react"
 
 const useGroupLoader = createLoaderStore(getGroup)

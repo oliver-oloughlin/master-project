@@ -1,5 +1,5 @@
 import { createLoaderStore } from "./_loader"
-import { getGroups } from "#/services/groups.service"
+import { getGroups } from "#/services/adfectus/groups.service"
 
 const useGroupsLoader = createLoaderStore(getGroups)
 

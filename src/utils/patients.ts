@@ -1,5 +1,5 @@
-import type { Patient } from "#/models/patient"
-import type { Rating } from "#/models/rating"
+import type { Patient } from "#/models/view/patient"
+import type { Rating } from "#/models/view/rating"
 
 export type ScoreTimestamp = {
   score: number

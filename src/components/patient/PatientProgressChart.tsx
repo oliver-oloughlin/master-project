@@ -1,10 +1,10 @@
-import { Patient } from "#/models/patient"
+import { Patient } from "#/models/view/patient"
 import Line from "#/components/charts/Line"
 import {
   dailyAverageScoresByWeeklyWindow,
   scoresByActivity,
 } from "#/utils/patients"
-import { ScoreMap } from "#/models/rating"
+import { ScoreMap } from "#/models/view/rating"
 import { useEffect, useMemo, useState } from "react"
 import { useGroup } from "#/stores/group.store"
 import { Skeleton } from "../ui/skeleton"

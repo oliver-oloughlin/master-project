@@ -4,8 +4,8 @@ import {
   getPatientById,
   updatePatientById,
   addPatient as _addPatient,
-} from "#/services/patients.service"
-import { Patient } from "#/models/patient"
+} from "#/services/adfectus/patients.service"
+import { Patient } from "#/models/view/patient"
 
 const usePatientsLoader = createLoaderStore(getPatients)
 

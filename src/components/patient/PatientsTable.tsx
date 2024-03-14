@@ -18,7 +18,7 @@ import {
 import { Fragment, useMemo, useState } from "react"
 import { Button } from "#/components/ui/button"
 import EditPatientDialog from "#/components/patient/EditPatientDialog"
-import { Patient } from "#/models/patient"
+import { Patient } from "#/models/view/patient"
 import ViewPatientDialog from "./ViewPatientDialog"
 import { Link } from "@tanstack/react-router"
 import { twMerge } from "tailwind-merge"

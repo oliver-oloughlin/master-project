@@ -1,4 +1,4 @@
-import { Patient } from "#/models/patient"
+import { Patient } from "#/models/view/patient"
 import { formatDisplayDate } from "#/utils/formatters"
 import Score from "../utils/Score"
 import {
