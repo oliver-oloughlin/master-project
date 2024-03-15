@@ -1,7 +1,7 @@
 import { Outlet } from "@tanstack/react-router"
 import UserButton from "../components/user/UserButton"
 import { Link, useMatches } from "@tanstack/react-router"
-import { useGroups } from "#/stores/groups.store"
+import { useGroups } from "#/hooks/useGroupIds"
 import { useEffect, useState } from "react"
 import Triangle from "../components/utils/Triangle"
 

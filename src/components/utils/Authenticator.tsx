@@ -1,7 +1,7 @@
 import { Authenticator } from "@aws-amplify/ui-react"
 import { Amplify } from "aws-amplify"
 import "@aws-amplify/ui-react/styles.css"
-import { useUsername } from "#/stores/username.store"
+import { useUsername } from "#/hooks/userExternalUser"
 import { useEffect } from "react"
 
 // Configure Amplify in index file or root file

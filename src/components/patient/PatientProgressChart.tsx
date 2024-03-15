@@ -6,7 +6,7 @@ import {
 } from "#/utils/patients"
 import { ScoreMap } from "#/models/view/rating"
 import { useEffect, useMemo, useState } from "react"
-import { useGroup } from "#/stores/group.store"
+import { useGroup } from "#/hooks/useGroup"
 import { Skeleton } from "../ui/skeleton"
 import Repeat from "../utils/Repeat"
 

@@ -1,4 +1,4 @@
-import { useGroups } from "#/stores/groups.store"
+import { useGroups } from "#/hooks/useGroupIds"
 import { formatDateInputValue, formatDisplayDate } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -14,8 +14,8 @@ import {
 } from "../ui/select"
 import { Button } from "../ui/button"
 import { useEffect, useMemo, useState } from "react"
-import { usePatients } from "#/stores/patients.store"
-import { useExternalPatients } from "#/stores/external_patients.store"
+import { usePatients } from "#/hooks/usePatients"
+import { useExternalPatients } from "#/hooks/useExternalPatients"
 import SearchBox from "../utils/SearchBox"
 import {
   Table,

@@ -1,5 +1,5 @@
 import type { Patient } from "#/models/view/patient"
-import { useGroups } from "#/stores/groups.store"
+import { useGroups } from "#/hooks/useGroupIds"
 import { formatDateInputValue } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -15,7 +15,7 @@ import {
 } from "../ui/select"
 import { Button } from "../ui/button"
 import { useState } from "react"
-import { usePatients } from "#/stores/patients.store"
+import { usePatients } from "#/hooks/usePatients"
 
 export type EditPatientFormProps = {
   patient: Patient

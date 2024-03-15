@@ -1,5 +1,5 @@
 import PatientsTable from "#/components/patient/PatientsTable"
-import { usePatients } from "#/stores/patients.store"
+import { usePatients } from "#/hooks/usePatients"
 import { useEffect } from "react"
 
 export default function IndexRoute() {

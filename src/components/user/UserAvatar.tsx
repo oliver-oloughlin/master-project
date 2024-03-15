@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar"
-import { useUsername } from "#/stores/username.store"
+import { useUsername } from "#/hooks/userExternalUser"
 import { useEffect } from "react"
 
 export default function UserAvatar() {

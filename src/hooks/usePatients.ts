@@ -1,16 +1,16 @@
-import { createLoaderStore } from "./_loader"
+import { createLoaderStore, useLoaderStore } from "#/utils/zustand"
 import {
   getPatients,
   getPatientById,
   updatePatientById,
-  addPatient as _addPatient,
-} from "#/services/adfectus/patients.service"
-import { Patient } from "#/models/view/patient"
+  addPatient,
+} from "#/services/patients"
+import type { ViewPatient } from "#/models/view/patient"
 
-const usePatientsLoader = createLoaderStore(getPatients)
+const store = createLoaderStore(getPatients)
 
 export const usePatients = () => {
-  const { data, fetch, loading, error, mutate } = usePatientsLoader()
+  const { data, fetch, loading, error, mutate } = useLoaderStore(store)
 
   /**
    * Get a patient by id
