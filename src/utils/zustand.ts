@@ -2,9 +2,9 @@ import { create } from "zustand"
 
 export type LoaderStore<TArgs extends unknown[], TData> = {
   data: TData | null
+  lastArgs: TArgs | null
   loading: boolean
   error: unknown
-  initialized: boolean
   fetch(...args: TArgs): Promise<void>
   mutate(fn: (data: TData) => TData): void
   init(...args: TArgs): Promise<void>
@@ -23,6 +23,7 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(
 ) {
   return create<LoaderStore<TArgs, Awaited<TData>>>((set, get) => ({
     data: null,
+    lastArgs: null,
     loading: false,
     error: null,
     initialized: false,
@@ -49,9 +50,13 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(
       }
     },
     async init(...args: TArgs) {
-      const { initialized, fetch } = get()
-      if (!initialized) {
-        set({ initialized: true })
+      const { lastArgs, fetch } = get()
+
+      const isStale =
+        lastArgs === null || args.some((arg, i) => arg !== lastArgs[i])
+
+      if (isStale) {
+        set({ lastArgs: args })
         await fetch(...args)
       }
     },
