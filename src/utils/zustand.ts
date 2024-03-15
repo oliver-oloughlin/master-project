@@ -6,7 +6,7 @@ export type LoaderStore<TArgs extends unknown[], TData> = {
   loading: boolean
   error: unknown
   fetch(...args: TArgs): Promise<void>
-  mutate(fn: (data: TData) => TData): void
+  mutate(fn: (data: TData) => TData | Promise<TData>): Promise<void>
   init(...args: TArgs): Promise<void>
 }
 
@@ -36,14 +36,14 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(
         set({ error })
       }
     },
-    mutate(fn) {
+    async mutate(fn) {
       try {
         const { data } = get()
         if (!data) {
           return
         }
 
-        set({ data: fn(data) })
+        set({ data: await fn(data) })
       } catch (error) {
         console.error(error)
         set({ error })

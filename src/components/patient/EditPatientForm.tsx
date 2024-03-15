@@ -32,7 +32,6 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     patientId: z.string().regex(/^\d+$/),
     firstName: z.string().min(1),
     groupId: z.enum(groupIds as [string, ...string[]]),
-    instId: z.string(),
     arrivalDate: z.string(),
     departureDate: z.string(),
   })
@@ -59,6 +58,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     const success = await updatePatient(patient.patientId, {
       ...values,
       ratings: patient.ratings,
+      instId: patient.instId,
     })
 
     if (success) {

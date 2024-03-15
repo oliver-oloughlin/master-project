@@ -100,8 +100,8 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   }
 
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-1">
+    <div className="grid gap-4 min-w-fit">
+      <div className="grid gap-1 min-w-fit">
         <SearchBox
           items={mappedExternalPatients}
           searchKeys={[
@@ -125,7 +125,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
           defaultSearchKey="firstName"
           onInput={setSearchedExternalPatients}
         />
-        <div className="overflow-y-auto h-80">
+        <div className="overflow-y-auto h-80 min-w-fit">
           {externalPatients.length > 0 ? (
             <Table>
               <TableHeader>

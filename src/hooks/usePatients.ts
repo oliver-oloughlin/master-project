@@ -31,16 +31,17 @@ export const usePatients = () => {
    */
   async function updatePatient(patientId: string, data: ViewPatient) {
     const success = await updatePatientById(patientId, data)
+
     if (!success) {
       return success
     }
 
-    const newPatient = await getPatientById(data.patientId ?? patientId)
+    const newPatient = await getPatientById(data.patientId)
     if (!newPatient) {
       return success
     }
 
-    mutate((data) => {
+    await mutate((data) => {
       const index = data?.findIndex((p) => p.patientId === patientId)
       if (!index) {
         return data
@@ -74,7 +75,6 @@ export const usePatients = () => {
   return {
     get patients() {
       init()
-      console.log("Getting!")
       return data ?? []
     },
     loading,
