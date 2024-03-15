@@ -1,17 +1,17 @@
-import { Patient } from "#/models/view/patient"
+import { ViewPatient } from "#/models/view/patient"
 import Line from "#/components/charts/Line"
 import {
   dailyAverageScoresByWeeklyWindow,
   scoresByActivity,
 } from "#/utils/patients"
-import { ScoreMap } from "#/models/view/rating"
-import { useEffect, useMemo, useState } from "react"
+import { ScoreMap } from "#/utils/score"
+import { useMemo, useState } from "react"
 import { useGroup } from "#/hooks/useGroup"
 import { Skeleton } from "../ui/skeleton"
 import Repeat from "../utils/Repeat"
 
 export type PatientsProgressChartProps = {
-  patient: Patient
+  patient: ViewPatient
 }
 
 const GROUP_LABEL = "Gruppe Gjennomsnitt"
@@ -19,19 +19,13 @@ const GROUP_LABEL = "Gruppe Gjennomsnitt"
 export default function PatientProgressChart({
   patient,
 }: PatientsProgressChartProps) {
-  const { group, fetchGroup, loading, error } = useGroup(patient.groupId)
+  const { group, loading } = useGroup(patient.groupId)
   const activityScores = useMemo(
     () => scoresByActivity(patient.ratings),
     [patient],
   )
   const activities = Array.from(activityScores.keys())
   const [activity, setActivity] = useState(activities.at(0) ?? "")
-
-  useEffect(() => {
-    if (!group && !loading && !error) {
-      fetchGroup()
-    }
-  }, [fetchGroup, group, loading, error])
 
   const groupAverageDataset = useMemo(() => {
     const groupRatings = group?.patients.map((p) => p.ratings).flat()

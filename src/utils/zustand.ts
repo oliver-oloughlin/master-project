@@ -1,11 +1,20 @@
-import { useEffect } from "react"
-import { StoreApi, UseBoundStore, create } from "zustand"
+import { create } from "zustand"
 
 export type LoaderStore<TArgs extends unknown[], TData> = {
   data: TData | null
   loading: boolean
   error: unknown
+  initialized: boolean
   fetch(...args: TArgs): Promise<void>
+  mutate(fn: (data: TData) => TData): void
+  init(...args: TArgs): Promise<void>
+}
+
+export type InitializedLoaderStore<TDataName extends string, TData> = {
+  [K in TDataName]: TData | null
+} & {
+  loading: boolean
+  error: unknown
   mutate(fn: (data: TData) => TData): void
 }
 
@@ -16,6 +25,7 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(
     data: null,
     loading: false,
     error: null,
+    initialized: false,
     async fetch(...args: TArgs) {
       try {
         set({ loading: true })
@@ -38,18 +48,12 @@ export function createLoaderStore<const TArgs extends unknown[], const TData>(
         set({ error })
       }
     },
+    async init(...args: TArgs) {
+      const { initialized, fetch } = get()
+      if (!initialized) {
+        set({ initialized: true })
+        await fetch(...args)
+      }
+    },
   }))
-}
-
-export function useLoaderStore<const TArgs extends unknown[], const TData>(
-  store: UseBoundStore<StoreApi<LoaderStore<TArgs, Awaited<TData>>>>,
-  ...args: TArgs
-) {
-  const initializedStore = store()
-
-  useEffect(() => {
-    initializedStore.fetch(...args)
-  }, [args])
-
-  return initializedStore
 }

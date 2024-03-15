@@ -1,12 +1,16 @@
 import { getExternalPatients } from "#/services/patients"
-import { createLoaderStore, useLoaderStore } from "#/utils/zustand"
+import { createLoaderStore } from "#/utils/zustand"
 
 const store = createLoaderStore(getExternalPatients)
 
-export const useExternalPatients = () => {
-  const { data, ...rest } = useLoaderStore(store)
+export const useExternalPatients = (groupId?: string) => {
+  const { data, loading, error, init } = store()
   return {
-    externalPatients: data ?? [],
-    ...rest,
+    get externalPatients() {
+      init(groupId)
+      return data ?? []
+    },
+    loading,
+    error,
   }
 }

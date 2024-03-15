@@ -1,5 +1,5 @@
-import type { Patient } from "#/models/view/patient"
-import { useGroups } from "#/hooks/useGroupIds"
+import type { ViewPatient } from "#/models/view/patient"
+import { useGroupIds } from "#/hooks/useGroupIds"
 import { formatDateInputValue } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -18,11 +18,11 @@ import { useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 
 export type EditPatientFormProps = {
-  patient: Patient
+  patient: ViewPatient
 }
 
 export default function EditPatientForm({ patient }: EditPatientFormProps) {
-  const { groups } = useGroups()
+  const { groupIds } = useGroupIds()
   const { updatePatient } = usePatients()
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">(
     "unsaved",
@@ -31,9 +31,8 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
   const EditPatientSchema = z.object({
     patientId: z.string().regex(/^\d+$/),
     firstName: z.string().min(1),
-    groupId: z.enum(
-      groups.map((group) => group.groupId) as [string, ...string[]],
-    ),
+    groupId: z.enum(groupIds as [string, ...string[]]),
+    instId: z.string(),
     arrivalDate: z.string(),
     departureDate: z.string(),
   })
@@ -57,7 +56,11 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
   })
 
   async function handleSubmit(values: z.infer<typeof EditPatientSchema>) {
-    const success = await updatePatient(patient.patientId, values)
+    const success = await updatePatient(patient.patientId, {
+      ...values,
+      ratings: patient.ratings,
+    })
+
     if (success) {
       setSaveState("saved")
     } else {
@@ -107,9 +110,9 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {groups.map((group) => (
-                      <SelectItem key={group.groupId} value={group.groupId}>
-                        {group.groupId}
+                    {groupIds.map((groupId) => (
+                      <SelectItem key={groupId} value={groupId}>
+                        {groupId}
                       </SelectItem>
                     ))}
                   </SelectContent>

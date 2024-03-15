@@ -1,16 +1,16 @@
-import { createLoaderStore, useLoaderStore } from "#/utils/zustand"
+import { createLoaderStore } from "#/utils/zustand"
 import {
   getPatients,
   getPatientById,
   updatePatientById,
-  addPatient,
+  addPatient as _addPatient,
 } from "#/services/patients"
 import type { ViewPatient } from "#/models/view/patient"
 
 const store = createLoaderStore(getPatients)
 
 export const usePatients = () => {
-  const { data, fetch, loading, error, mutate } = useLoaderStore(store)
+  const { data, loading, error, init, mutate } = store()
 
   /**
    * Get a patient by id
@@ -29,16 +29,13 @@ export const usePatients = () => {
    * @param patientData
    * @returns
    */
-  async function updatePatient(
-    patientId: string,
-    patientData: Partial<Patient>,
-  ) {
-    const success = await updatePatientById(patientId, patientData)
+  async function updatePatient(patientId: string, data: ViewPatient) {
+    const success = await updatePatientById(patientId, data)
     if (!success) {
       return success
     }
 
-    const newPatient = await getPatientById(patientData.patientId ?? patientId)
+    const newPatient = await getPatientById(data.patientId ?? patientId)
     if (!newPatient) {
       return success
     }
@@ -61,7 +58,7 @@ export const usePatients = () => {
    * @param patient
    * @returns
    */
-  async function addPatient(patient: Patient) {
+  async function addPatient(patient: ViewPatient) {
     const success = await _addPatient(patient)
     if (success) {
       mutate((data) =>
@@ -75,10 +72,13 @@ export const usePatients = () => {
 
   // Exposed view
   return {
-    patients: data ?? [],
+    get patients() {
+      init()
+      console.log("Getting!")
+      return data ?? []
+    },
     loading,
     error,
-    fetchPatients: fetch,
     getPatient,
     updatePatient,
     addPatient,

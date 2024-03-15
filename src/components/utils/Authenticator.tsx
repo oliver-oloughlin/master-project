@@ -1,8 +1,7 @@
 import { Authenticator } from "@aws-amplify/ui-react"
 import { Amplify } from "aws-amplify"
 import "@aws-amplify/ui-react/styles.css"
-import { useUsername } from "#/hooks/userExternalUser"
-import { useEffect } from "react"
+import { useExternalUser } from "#/hooks/useExternalUser"
 
 // Configure Amplify in index file or root file
 Amplify.configure({
@@ -18,11 +17,7 @@ export default function OuterAuthenticator({
 }: {
   children?: React.ReactNode
 }) {
-  const { username, fetchUsername } = useUsername()
-
-  useEffect(() => {
-    fetchUsername()
-  }, [fetchUsername])
+  const { externalUser } = useExternalUser()
 
   return (
     <Authenticator
@@ -31,8 +26,8 @@ export default function OuterAuthenticator({
       formFields={{
         signIn: {
           username: {
-            defaultValue: username ?? undefined,
-            isReadOnly: !!username,
+            defaultValue: externalUser?.username ?? undefined,
+            isReadOnly: !!externalUser?.username,
           },
         },
       }}

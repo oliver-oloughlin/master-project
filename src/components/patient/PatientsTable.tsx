@@ -18,7 +18,7 @@ import {
 import { Fragment, useMemo, useState } from "react"
 import { Button } from "#/components/ui/button"
 import EditPatientDialog from "#/components/patient/EditPatientDialog"
-import { Patient } from "#/models/view/patient"
+import { ViewPatient } from "#/models/view/patient"
 import ViewPatientDialog from "./ViewPatientDialog"
 import { Link } from "@tanstack/react-router"
 import { twMerge } from "tailwind-merge"
@@ -35,7 +35,7 @@ type Order = "asc" | "desc"
 const PAGE_SIZE = 10
 
 export type PatientsTableProps = {
-  patients: Patient[]
+  patients: ViewPatient[]
   loading: boolean
   error: unknown
   groupId?: string
@@ -80,7 +80,9 @@ export default function PatientsTable({
   }
 
   // Search handler
-  function handleSearch(result: (Patient & { displayArrivalDate: string })[]) {
+  function handleSearch(
+    result: (ViewPatient & { displayArrivalDate: string })[],
+  ) {
     setSearchedPatients(result)
     setPage(1)
   }

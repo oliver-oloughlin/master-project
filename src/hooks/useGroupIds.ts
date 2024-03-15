@@ -1,12 +1,16 @@
-import { createLoaderStore, useLoaderStore } from "#/utils/zustand"
+import { createLoaderStore } from "#/utils/zustand"
 import { getGroupIds } from "#/services/groups"
 
 const store = createLoaderStore(getGroupIds)
 
 export const useGroupIds = () => {
-  const { data, ...rest } = useLoaderStore(store)
+  const { data, loading, error, init } = store()
   return {
-    groupIds: data ?? [],
-    ...rest,
+    get groupIds() {
+      init()
+      return data ?? []
+    },
+    loading,
+    error,
   }
 }
