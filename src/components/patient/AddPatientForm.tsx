@@ -123,6 +123,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
             },
           ]}
           defaultSearchKey="firstName"
+          placeholder="Søk etter pasient..."
           onInput={setSearchedExternalPatients}
         />
         <div className="overflow-y-auto h-80 min-w-fit">

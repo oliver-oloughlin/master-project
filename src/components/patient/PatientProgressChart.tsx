@@ -26,6 +26,7 @@ export default function PatientProgressChart({
   )
   const activities = Array.from(activityScores.keys())
   const [activity, setActivity] = useState(activities.at(0) ?? "")
+  const [showGroupAvg, setShowGorupAvg] = useState(false)
 
   const groupAverageDataset = useMemo(() => {
     const groupRatings = group?.patients.map((p) => p.ratings).flat()
@@ -61,10 +62,10 @@ export default function PatientProgressChart({
             activity: act,
             label: GROUP_LABEL,
             data,
-            hidden: false,
+            hidden: !showGroupAvg,
             backgroundColor: color,
             borderColor: color,
-            tension: 0.25,
+            tension: 0.025,
             pointRadius: 0,
             pointHitRadius: 0,
             pointHoverRadius: 0,
@@ -72,7 +73,7 @@ export default function PatientProgressChart({
         })
         .find((d) => d.activity === activity) ?? null
     )
-  }, [activity, group, patient])
+  }, [activity, group, patient, showGroupAvg])
 
   const datasets = useMemo(() => {
     const patientDatasets = Array.from(activityScores.entries()).map(
@@ -162,8 +163,11 @@ export default function PatientProgressChart({
               sort: (a, b) =>
                 a.text === GROUP_LABEL ? -1 : a.text.localeCompare(b.text),
             },
-            onClick: (_, { text }) =>
-              setActivity((act) => (text === GROUP_LABEL ? act : text)),
+            onClick: (_, { text }) => {
+              text === GROUP_LABEL
+                ? setShowGorupAvg((v) => !v)
+                : setActivity(text)
+            },
           },
           datalabels: {
             display: false,
