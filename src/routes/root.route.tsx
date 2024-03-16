@@ -1,8 +1,8 @@
 import { Outlet } from "@tanstack/react-router"
 import UserButton from "../components/user/UserButton"
 import { Link, useMatches } from "@tanstack/react-router"
-import { useGroups } from "#/stores/groups.store"
-import { useEffect, useState } from "react"
+import { useGroupIds } from "#/hooks/useGroupIds"
+import { useState } from "react"
 import Triangle from "../components/utils/Triangle"
 
 // Root component
@@ -18,7 +18,7 @@ export default function Root() {
 }
 
 function Header() {
-  const { groups, fetchGroups } = useGroups()
+  const { groupIds } = useGroupIds()
   const [groupsOpen, setGroupsOpen] = useState(false)
   const matches = useMatches()
   const pathnames = matches.map((m) => m.routeId)
@@ -32,10 +32,6 @@ function Header() {
     "px-4 py-2 h-fit w-fit text-[--clr-adfectus] hover:text-white focus:text-white bg-[--bg-adfectus] text-lg font-medium duration-100 relative"
   const selectedClass =
     "after:absolute after:content-[''] after:bottom-0 after:left-0 after:right-0 after:h-[.125em] after:rounded-full after:bg-current"
-
-  useEffect(() => {
-    fetchGroups()
-  }, [fetchGroups])
 
   return (
     <header className="w-screen h-20 px-10 flex justify-between items-center bg-[--bg-adfectus] z-40">
@@ -66,8 +62,8 @@ function Header() {
           </Link>
           {groupsOpen && (
             <div className="absolute left-0 top-full flex flex-col min-w-full bg-white rounded-md border-slate-100 border-[.075rem] shadow-md isolate overflow-hidden z-50">
-              {groups &&
-                groups.map(({ groupId }) => (
+              {groupIds &&
+                groupIds.map((groupId) => (
                   <Link
                     key={groupId}
                     to="/groups/$groupId"

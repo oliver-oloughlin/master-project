@@ -1,9 +1,10 @@
-import type { ExternalPatient } from "../external_patient"
-import { mockGroups } from "./groups"
-import { names } from "./_names"
+import type { ExternalPatient } from "../patient"
+import { mockAdfectusGroups } from "../../adfectus/mocks/groups"
+import { names } from "../../adfectus/mocks/_names"
 
 export const mockExternalPatients: ExternalPatient[] = []
 
+const groupIds = mockAdfectusGroups.map((g) => g.groupId)
 for (let i = 0; i < 300; i++) {
   const monthMs = 30 * 24 * 60 * 60 * 1_000
   const start = Date.now() - 6 * monthMs
@@ -11,14 +12,14 @@ for (let i = 0; i < 300; i++) {
   const range = end - start
   const arrivalDate = new Date(start + Math.random() * range).toISOString()
   const firstName = names[Math.floor(Math.random() * names.length)]
-  const groupId = mockGroups[i % mockGroups.length].groupId
+  const groupId = groupIds[i % groupIds.length]
 
   const patient = {
     firstName,
     arrivalDate,
     groupId,
     instId: "BS",
-    patientId: Math.round(Math.random() * 1_000_000).toString(),
+    userId: Math.round(Math.random() * 1_000_000).toString(),
   }
 
   mockExternalPatients.push({

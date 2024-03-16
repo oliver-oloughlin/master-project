@@ -1,4 +1,4 @@
-import { useGroups } from "#/stores/groups.store"
+import { useGroupIds } from "#/hooks/useGroupIds"
 import { formatDateInputValue, formatDisplayDate } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,9 +13,9 @@ import {
   SelectValue,
 } from "../ui/select"
 import { Button } from "../ui/button"
-import { useEffect, useMemo, useState } from "react"
-import { usePatients } from "#/stores/patients.store"
-import { useExternalPatients } from "#/stores/external_patients.store"
+import { useMemo, useState } from "react"
+import { usePatients } from "#/hooks/usePatients"
+import { useExternalPatients } from "#/hooks/useExternalPatients"
 import SearchBox from "../utils/SearchBox"
 import {
   Table,
@@ -25,17 +25,16 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table"
+import { fromExternalPatientToViewPatient } from "#/mappers/patients"
 
 export type AddPatientFormProps = {
   groupId?: string
 }
 
 export default function AddPatientForm({ groupId }: AddPatientFormProps) {
-  const { groups } = useGroups()
+  const { groupIds } = useGroupIds()
   const { addPatient } = usePatients()
-
-  const { externalPatients, fetchExternalPatients } =
-    useExternalPatients(groupId)
+  const { externalPatients } = useExternalPatients(groupId)
 
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">(
     "unsaved",
@@ -43,27 +42,21 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
 
   const mappedExternalPatients = useMemo(() => {
     return externalPatients.map((p) => ({
-      ...p,
+      ...fromExternalPatientToViewPatient(p, []),
       displayArrivalDate: formatDisplayDate(p.arrivalDate),
     }))
   }, [externalPatients])
 
   const [searchedExternalPatients, setSearchedExternalPatients] = useState(
-    mappedExternalPatients ?? [],
+    mappedExternalPatients,
   )
-
-  // Load external patients
-  useEffect(() => {
-    fetchExternalPatients()
-  }, [fetchExternalPatients])
 
   // Create form schema
   const AddPatientSchema = z.object({
     patientId: z.string().regex(/^\d+$/),
     firstName: z.string().min(1),
-    groupId: z.enum(
-      groups.map((group) => group.groupId) as [string, ...string[]],
-    ),
+    groupId: z.enum(groupIds as [string, ...string[]]),
+    instId: z.string(),
     arrivalDate: z.string(),
     departureDate: z.string(),
   })
@@ -79,6 +72,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
     form.setValue("firstName", patient.firstName)
     form.setValue("arrivalDate", formatDateInputValue(patient.arrivalDate))
     form.setValue("groupId", patient.groupId)
+    form.setValue("instId", patient.instId)
     form.setValue(
       "departureDate",
       formatDateInputValue(
@@ -95,7 +89,6 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   async function handleSubmit(values: z.infer<typeof AddPatientSchema>) {
     const success = await addPatient({
       ...values,
-      instId: groups.at(0)?.instId ?? "",
       ratings: [],
     })
 
@@ -107,8 +100,8 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   }
 
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-1">
+    <div className="grid gap-4 min-w-fit">
+      <div className="grid gap-1 min-w-fit">
         <SearchBox
           items={mappedExternalPatients}
           searchKeys={[
@@ -130,9 +123,10 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
             },
           ]}
           defaultSearchKey="firstName"
+          placeholder="Søk etter pasient..."
           onInput={setSearchedExternalPatients}
         />
-        <div className="overflow-y-auto h-80">
+        <div className="overflow-y-auto h-80 min-w-fit">
           {externalPatients.length > 0 ? (
             <Table>
               <TableHeader>
@@ -207,9 +201,9 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent data-content>
-                      {groups.map((group) => (
-                        <SelectItem key={group.groupId} value={group.groupId}>
-                          {group.groupId}
+                      {groupIds.map((groupId) => (
+                        <SelectItem key={groupId} value={groupId}>
+                          {groupId}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -239,6 +233,15 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
                 <FormControl>
                   <Input type="date" {...field} />
                 </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="instId"
+            render={({ field }) => (
+              <FormItem>
+                <Input type="hidden" {...field} />
               </FormItem>
             )}
           />

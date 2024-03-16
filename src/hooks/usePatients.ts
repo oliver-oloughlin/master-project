@@ -1,16 +1,16 @@
-import { createLoaderStore } from "./_loader"
+import { createLoaderStore } from "#/utils/zustand"
 import {
   getPatients,
   getPatientById,
   updatePatientById,
   addPatient as _addPatient,
-} from "#/services/patients.service"
-import { Patient } from "#/models/patient"
+} from "#/services/patients"
+import type { ViewPatient } from "#/models/view/patient"
 
-const usePatientsLoader = createLoaderStore(getPatients)
+const store = createLoaderStore(getPatients)
 
 export const usePatients = () => {
-  const { data, fetch, loading, error, mutate } = usePatientsLoader()
+  const { data, loading, error, init, mutate } = store()
 
   /**
    * Get a patient by id
@@ -29,21 +29,19 @@ export const usePatients = () => {
    * @param patientData
    * @returns
    */
-  async function updatePatient(
-    patientId: string,
-    patientData: Partial<Patient>,
-  ) {
-    const success = await updatePatientById(patientId, patientData)
+  async function updatePatient(patientId: string, data: ViewPatient) {
+    const success = await updatePatientById(patientId, data)
+
     if (!success) {
       return success
     }
 
-    const newPatient = await getPatientById(patientData.patientId ?? patientId)
+    const newPatient = await getPatientById(data.patientId)
     if (!newPatient) {
       return success
     }
 
-    mutate((data) => {
+    await mutate((data) => {
       const index = data?.findIndex((p) => p.patientId === patientId)
       if (!index) {
         return data
@@ -61,7 +59,7 @@ export const usePatients = () => {
    * @param patient
    * @returns
    */
-  async function addPatient(patient: Patient) {
+  async function addPatient(patient: ViewPatient) {
     const success = await _addPatient(patient)
     if (success) {
       mutate((data) =>
@@ -75,10 +73,12 @@ export const usePatients = () => {
 
   // Exposed view
   return {
-    patients: data ?? [],
+    get patients() {
+      init()
+      return data ?? []
+    },
     loading,
     error,
-    fetchPatients: fetch,
     getPatient,
     updatePatient,
     addPatient,

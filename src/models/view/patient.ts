@@ -1,15 +1,15 @@
 import { z } from "zod"
-import { RatingSchema } from "./rating"
+import { ViewRatingSchema } from "./rating"
 
-export const PatientSchema = z.object({
+export const ViewPatientSchema = z.object({
   patientId: z.string(),
   groupId: z.string(),
   instId: z.string(),
   firstName: z.string(),
   arrivalDate: z.string(),
   departureDate: z.string().optional(),
-  ratings: z.array(RatingSchema),
+  ratings: z.array(ViewRatingSchema),
   avatarUrl: z.string().optional(),
 })
 
-export type Patient = z.infer<typeof PatientSchema>
+export type ViewPatient = z.infer<typeof ViewPatientSchema>

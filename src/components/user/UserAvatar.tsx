@@ -1,19 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from "#/components/ui/avatar"
-import { useUsername } from "#/stores/username.store"
-import { useEffect } from "react"
+import { useExternalUser } from "#/hooks/useExternalUser"
 
 export default function UserAvatar() {
-  const { username, fetchUsername } = useUsername()
-
-  useEffect(() => {
-    fetchUsername()
-  }, [fetchUsername])
+  const { externalUser } = useExternalUser()
 
   return (
     <Avatar>
       <AvatarImage />
       <AvatarFallback className="grid place-items-center items-baseline text-3xl bg-slate-200 text-slate-500">
-        {username?.at(0)?.toUpperCase()}
+        {externalUser?.username.at(0)?.toUpperCase()}
       </AvatarFallback>
     </Avatar>
   )

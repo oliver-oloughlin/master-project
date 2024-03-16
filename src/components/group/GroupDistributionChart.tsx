@@ -1,4 +1,4 @@
-import { ScoreMap } from "#/models/rating"
+import { ScoreMap } from "#/utils/score"
 import Bar from "../charts/Bar"
 
 export default function GroupDistributionChart({

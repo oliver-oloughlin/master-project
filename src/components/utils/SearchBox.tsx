@@ -15,24 +15,29 @@ export type SearchKey<T> = {
   label: string
 }
 
-export type SearchBoxProps<T> = Omit<
+export type SearchableKeys<T1, T2 extends SearchKey<T1>[]> = T2[number]["key"]
+
+export type SearchBoxProps<T1, T2 extends SearchKey<T1>[]> = Omit<
   HTMLAttributes<HTMLInputElement>,
   "onInput"
 > & {
-  items: T[]
-  searchKeys: [SearchKey<T>, ...SearchKey<T>[]]
-  defaultSearchKey: keyof T
-  onInput: (items: T[]) => unknown
+  items: T1[]
+  searchKeys: T2
+  defaultSearchKey: SearchableKeys<T1, T2>
+  onInput: (items: T1[]) => unknown
 }
 
-export default function SearchBox<T extends Record<string, unknown>>({
+export default function SearchBox<
+  const T1 extends Record<string, unknown>,
+  const T2 extends SearchKey<T1>[],
+>({
   items,
   searchKeys,
   defaultSearchKey,
   onInput,
   className,
   ...rest
-}: SearchBoxProps<T>) {
+}: SearchBoxProps<T1, T2>) {
   const [searchKey, setSearchKey] = useState(
     searchKeys.find((sk) => sk.key === defaultSearchKey) ?? searchKeys[0],
   )

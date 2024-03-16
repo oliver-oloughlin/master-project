@@ -1,17 +1,12 @@
 import { groupRoute } from "#/Router"
 import GroupRatingsTable from "#/components/group/GroupRatingsTable"
 import PatientsTable from "#/components/patient/PatientsTable"
-import { useGroup } from "#/stores/group.store"
-import { useEffect } from "react"
+import { useGroup } from "#/hooks/useGroup"
 
 export default function Groups() {
   const { groupId } = groupRoute.useParams()
-  const { group, loading, error, fetchGroup } = useGroup(groupId)
+  const { group, loading, error } = useGroup(groupId)
   const patients = group?.patients ?? []
-
-  useEffect(() => {
-    fetchGroup()
-  }, [fetchGroup])
 
   return (
     <div className="m-auto w-[min(100%,100ch)] items-center p-6 grid gap-6">

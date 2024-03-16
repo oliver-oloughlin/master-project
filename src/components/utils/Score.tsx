@@ -1,4 +1,4 @@
-import { ScoreMap } from "#/models/rating"
+import { ScoreMap } from "#/utils/score"
 import { twMerge } from "tailwind-merge"
 
 export type ScoreProps = {

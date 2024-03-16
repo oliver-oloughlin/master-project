@@ -1,5 +1,10 @@
-import { Rating, Score, ScoreMap, StatusSchema } from "../rating"
-import type { Patient } from "../patient.ts"
+import {
+  AdfectusRating,
+  AdfectusScore,
+  AdfectusStatusSchema,
+} from "../../adfectus/rating.ts"
+import type { AdfectusPatient } from "../../adfectus/patient.ts"
+import { ScoreMap } from "#/utils/score.ts"
 import { DEFAULT_PATIENT_STAY_DURATION_DAYS } from "#/utils/constants.ts"
 
 const activities = [
@@ -21,8 +26,8 @@ const activities = [
 
 const scoreValues = Array.from(ScoreMap.keys())
 
-export function mockRatings(patient: Omit<Patient, "ratings">) {
-  const ratings: Rating[] = []
+export function mockAdfectusRatings(patient: AdfectusPatient) {
+  const ratings: AdfectusRating[] = []
 
   const arrivalDate = new Date(patient.arrivalDate)
 
@@ -33,7 +38,7 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
           DEFAULT_PATIENT_STAY_DURATION_DAYS * 24 * 60 * 60 * 1_000,
       )
 
-  const statuses = new Set(Object.values(StatusSchema.Values))
+  const statuses = new Set(Object.values(AdfectusStatusSchema.Values))
 
   if (arrivalDate.valueOf() > Date.now()) {
     statuses.delete("during")
@@ -48,7 +53,7 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
   for (const status of statuses) {
     const n = status === "during" ? 3 : 1
     for (let i = 0; i < n; i++) {
-      const scores: Score[] = activities.map((activity) => ({
+      const scores: AdfectusScore[] = activities.map((activity) => ({
         activity,
         score: scoreValues[Math.floor(Math.random() * scoreValues.length)],
       }))
@@ -68,7 +73,7 @@ export function mockRatings(patient: Omit<Patient, "ratings">) {
                 )
 
       ratings.push({
-        patientId: patient.patientId,
+        userId: patient.userId,
         scores,
         status,
         timestamp: timestampDate.toISOString(),

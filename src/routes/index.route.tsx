@@ -1,14 +1,8 @@
 import PatientsTable from "#/components/patient/PatientsTable"
-import { usePatients } from "#/stores/patients.store"
-import { useEffect } from "react"
+import { usePatients } from "#/hooks/usePatients"
 
 export default function IndexRoute() {
-  const { patients, loading, error, fetchPatients } = usePatients()
-
-  useEffect(() => {
-    fetchPatients()
-  }, [fetchPatients])
-
+  const { patients, loading, error } = usePatients()
   return (
     <PatientsTable
       patients={patients}

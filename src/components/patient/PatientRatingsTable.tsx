@@ -1,4 +1,4 @@
-import { Patient } from "#/models/patient"
+import { ViewPatient } from "#/models/view/patient"
 import { formatDisplayDate } from "#/utils/formatters"
 import Score from "../utils/Score"
 import {
@@ -11,7 +11,7 @@ import {
 } from "../ui/table"
 
 export type PatientRatingsTableProps = {
-  patient: Patient
+  patient: ViewPatient
 }
 
 export default function PatientRatingsTable({
