@@ -1,4 +1,5 @@
 import { z } from "zod"
+import { Season, SeasonSchema } from "../shared/season"
 
 export const ExternalPatientSchema = z.object({
   userId: z.string(),
@@ -7,6 +8,7 @@ export const ExternalPatientSchema = z.object({
   firstName: z.string(),
   arrivalDate: z.string(),
   departureDate: z.string().optional(),
+  season: SeasonSchema.default(Season.Summer),
 })
 
 export type ExternalPatient = z.infer<typeof ExternalPatientSchema>

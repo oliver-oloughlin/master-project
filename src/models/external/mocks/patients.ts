@@ -1,6 +1,7 @@
 import type { ExternalPatient } from "../patient"
 import { mockAdfectusGroups } from "../../adfectus/mocks/groups"
 import { names } from "../../adfectus/mocks/_names"
+import { Season } from "#/models/shared/season"
 
 export const mockExternalPatients: ExternalPatient[] = []
 
@@ -14,15 +15,12 @@ for (let i = 0; i < 300; i++) {
   const firstName = names[Math.floor(Math.random() * names.length)]
   const groupId = groupIds[i % groupIds.length]
 
-  const patient = {
+  mockExternalPatients.push({
     firstName,
     arrivalDate,
     groupId,
     instId: "BS",
     userId: Math.round(Math.random() * 1_000_000).toString(),
-  }
-
-  mockExternalPatients.push({
-    ...patient,
+    season: Season.Summer,
   })
 }

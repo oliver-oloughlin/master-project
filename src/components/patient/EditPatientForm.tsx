@@ -16,6 +16,8 @@ import {
 import { Button } from "../ui/button"
 import { useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
+import { Switch } from "../ui/switch"
+import { Season } from "#/models/shared/season"
 
 export type EditPatientFormProps = {
   patient: ViewPatient
@@ -34,13 +36,13 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
     groupId: z.enum(groupIds as [string, ...string[]]),
     arrivalDate: z.string(),
     departureDate: z.string(),
+    season: z.coerce.number(),
   })
 
   const form = useForm<z.infer<typeof EditPatientSchema>>({
     resolver: zodResolver(EditPatientSchema),
     defaultValues: {
-      patientId: patient.patientId,
-      firstName: patient.firstName,
+      ...patient,
       groupId: patient.groupId,
       arrivalDate: formatDateInputValue(patient.arrivalDate),
       departureDate: patient.departureDate
@@ -141,6 +143,31 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
               <FormLabel>Avreisedato</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="season"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sesong</FormLabel>
+              <FormControl>
+                <span className="flex gap-2 items-center">
+                  <Input type="hidden" {...field} />
+                  <Switch
+                    inputMode="none"
+                    checked={form.getValues().season === Season.Winter}
+                    onCheckedChange={(checked) =>
+                      form.setValue(
+                        "season",
+                        checked ? Season.Winter : Season.Summer,
+                      )
+                    }
+                  />
+                  Vinter
+                </span>
               </FormControl>
             </FormItem>
           )}

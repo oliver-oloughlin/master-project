@@ -1,6 +1,7 @@
 import type { AdfectusPatient } from "../patient"
 import { mockAdfectusGroups } from "./groups"
 import { names } from "./_names"
+import { Season } from "#/models/shared/season"
 
 export const mockAdfectusPatients: AdfectusPatient[] = []
 
@@ -21,5 +22,6 @@ for (let i = 0; i < 350; i++) {
     instId: "BS",
     userId: Math.round(Math.random() * 1_000_000).toString(),
     avatarUrl: "/patient_avatar.png",
+    season: Season.Summer,
   })
 }

@@ -26,6 +26,8 @@ import {
   TableRow,
 } from "../ui/table"
 import { fromExternalPatientToViewPatient } from "#/mappers/patients"
+import { Switch } from "../ui/switch"
+import { Season } from "#/models/shared/season"
 
 export type AddPatientFormProps = {
   groupId?: string
@@ -59,11 +61,15 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
     instId: z.string(),
     arrivalDate: z.string(),
     departureDate: z.string(),
+    season: z.coerce.number(),
   })
 
   // Create form
   const form = useForm<z.infer<typeof AddPatientSchema>>({
     resolver: zodResolver(AddPatientSchema),
+    defaultValues: {
+      season: Season.Summer,
+    },
   })
 
   // Set form valeus when selecting external patient
@@ -73,6 +79,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
     form.setValue("arrivalDate", formatDateInputValue(patient.arrivalDate))
     form.setValue("groupId", patient.groupId)
     form.setValue("instId", patient.instId)
+    form.setValue("season", patient.season)
     form.setValue(
       "departureDate",
       formatDateInputValue(
@@ -232,6 +239,31 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
                 <FormLabel>Avreisedato</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="season"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sesong</FormLabel>
+                <FormControl>
+                  <span className="flex gap-2 items-center">
+                    <Input type="hidden" {...field} />
+                    <Switch
+                      inputMode="none"
+                      checked={form.getValues().season === Season.Winter}
+                      onCheckedChange={(checked) =>
+                        form.setValue(
+                          "season",
+                          checked ? Season.Winter : Season.Summer,
+                        )
+                      }
+                    />
+                    Vinter
+                  </span>
                 </FormControl>
               </FormItem>
             )}
