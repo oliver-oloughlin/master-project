@@ -8,7 +8,7 @@ import { ScoreMap } from "#/utils/score"
 import { useMemo, useState } from "react"
 import { useGroup } from "#/hooks/useGroup"
 import { Skeleton } from "../ui/skeleton"
-import Repeat from "../utils/Repeat"
+import Repeat from "../misc/Repeat"
 
 export type PatientsProgressChartProps = {
   patient: ViewPatient

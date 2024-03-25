@@ -13,11 +13,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
 import { useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 import { Switch } from "../ui/switch"
 import { Season } from "#/models/shared/season"
+import AdfetcusButton from "../misc/AdfectusButton"
 
 export type EditPatientFormProps = {
   patient: ViewPatient
@@ -184,9 +184,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
         )}
         <br />
         <div>
-          <Button type="submit" className="bg-[--bg-adfectus]">
-            Lagre endringer
-          </Button>
+          <AdfetcusButton type="submit">Lagre endringer</AdfetcusButton>
         </div>
       </form>
     </Form>

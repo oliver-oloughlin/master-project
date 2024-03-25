@@ -1,3 +1,4 @@
+import { ADFECTUS_BTN_CLASS } from "../misc/AdfectusButton"
 import {
   Dialog,
   DialogContent,
@@ -17,9 +18,7 @@ export default function GroupActivityScoreDistributionDialog({
 }) {
   return (
     <Dialog>
-      <DialogTrigger className="bg-[--bg-adfectus] hover:bg-cyan-600 !text-slate-50 rounded-md px-4 py-2">
-        Se fordeling
-      </DialogTrigger>
+      <DialogTrigger className={ADFECTUS_BTN_CLASS}>Se fordeling</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Fordeling - {activity}</DialogTitle>

@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "#/components/ui/dialog"
 import PatientView from "./PatientView"
+import { ADFECTUS_BTN_CLASS } from "../misc/AdfectusButton"
 
 export type EditPatientDialogProps = {
   patient: ViewPatient
@@ -16,9 +17,7 @@ export type EditPatientDialogProps = {
 export default function ViewPatientDialog({ patient }: EditPatientDialogProps) {
   return (
     <Dialog>
-      <DialogTrigger className="bg-[--bg-adfectus] hover:bg-cyan-600 rounded-md px-4 py-2 text-slate-100 hover:text-white">
-        Visning
-      </DialogTrigger>
+      <DialogTrigger className={ADFECTUS_BTN_CLASS}>Visning</DialogTrigger>
       <DialogContent className="min-w-fit overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{patient.firstName}</DialogTitle>

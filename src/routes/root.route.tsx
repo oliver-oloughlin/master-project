@@ -3,7 +3,7 @@ import UserButton from "../components/user/UserButton"
 import { Link, useMatches } from "@tanstack/react-router"
 import { useGroupIds } from "#/hooks/useGroupIds"
 import { useState } from "react"
-import Triangle from "../components/utils/Triangle"
+import Triangle from "../components/misc/Triangle"
 
 // Root component
 export default function Root() {

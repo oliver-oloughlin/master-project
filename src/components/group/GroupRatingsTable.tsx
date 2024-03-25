@@ -14,7 +14,7 @@ import {
   averageScoresAndCount,
   patientStatus,
 } from "#/utils/patients"
-import Score from "../utils/Score"
+import Score from "../misc/Score"
 import GroupActivityScoreDistributionDialog from "./GroupActivityScoreDistributionDialog"
 
 export type GroupRatingsTableProps = {

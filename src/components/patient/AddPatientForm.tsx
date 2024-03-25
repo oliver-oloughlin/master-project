@@ -16,7 +16,7 @@ import { Button } from "../ui/button"
 import { useMemo, useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 import { useExternalPatients } from "#/hooks/useExternalPatients"
-import SearchBox from "../utils/SearchBox"
+import SearchBox from "../misc/SearchBox"
 import {
   Table,
   TableBody,
@@ -28,6 +28,7 @@ import {
 import { fromExternalPatientToViewPatient } from "#/mappers/patients"
 import { Switch } from "../ui/switch"
 import { Season } from "#/models/shared/season"
+import AdfetcusButton from "../misc/AdfectusButton"
 
 export type AddPatientFormProps = {
   groupId?: string
@@ -289,9 +290,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
           )}
           <br />
           <div>
-            <Button type="submit" className="bg-[--bg-adfectus]">
-              Legg til pasient
-            </Button>
+            <AdfetcusButton type="submit">Legg til pasient</AdfetcusButton>
           </div>
         </form>
       </Form>
