@@ -4,7 +4,7 @@ import {
   dailyAverageScoresByWeeklyWindow,
   scoresByActivity,
 } from "#/utils/patients"
-import { ScoreMap } from "#/utils/score"
+import { ScoreTextMap } from "#/utils/score"
 import { useMemo, useState } from "react"
 import { useGroup } from "#/hooks/useGroup"
 import { Skeleton } from "../ui/skeleton"
@@ -150,7 +150,7 @@ export default function PatientProgressChart({
             offset: true,
             ticks: {
               stepSize: 1,
-              callback: (value) => ScoreMap.get(Number(value)) ?? "Ukjent",
+              callback: (value) => ScoreTextMap.get(Number(value)) ?? "Ukjent",
             },
           },
         },

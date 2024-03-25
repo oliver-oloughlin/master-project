@@ -4,7 +4,7 @@ import {
   AdfectusStatusSchema,
 } from "../../adfectus/rating.ts"
 import type { AdfectusPatient } from "../../adfectus/patient.ts"
-import { ScoreMap } from "#/utils/score.ts"
+import { ScoreTextMap } from "#/utils/score.tsx"
 import { DEFAULT_PATIENT_STAY_DURATION_DAYS } from "#/utils/constants.ts"
 
 const activities = [
@@ -24,7 +24,7 @@ const activities = [
   "Sykle",
 ]
 
-const scoreValues = Array.from(ScoreMap.keys())
+const scoreValues = Array.from(ScoreTextMap.keys())
 
 export function mockAdfectusRatings(patient: AdfectusPatient) {
   const ratings: AdfectusRating[] = []

@@ -1,4 +1,8 @@
-import { ScoreMap } from "#/utils/score"
+import {
+  ScoreBgColorMap,
+  ScoreBorderColorMap,
+  ScoreTextMap,
+} from "#/utils/score"
 import Bar from "../charts/Bar"
 
 export default function GroupDistributionChart({
@@ -6,20 +10,20 @@ export default function GroupDistributionChart({
 }: {
   scoresCountMap: Map<number, number>
 }) {
-  const colors = ["#fecaca", "#fed7aa", "#fef08a", "#d9f99d", "#a7f3d0"]
-  const borderColors = ["#fca5a5", "#fdba74", "#fcd34d", "#bef264", "#6ee7b7"]
   const sortedEntries = Array.from(scoresCountMap.entries()).sort(
     ([a], [b]) => a - b,
   )
   return (
     <Bar
       data={{
-        labels: sortedEntries.map(([score]) => ScoreMap.get(score)),
+        labels: sortedEntries.map(([score]) => ScoreTextMap.get(score)),
         datasets: [
           {
-            backgroundColor: sortedEntries.map(([score]) => colors[score - 1]),
-            borderColor: sortedEntries.map(
-              ([score]) => borderColors[score - 1],
+            backgroundColor: sortedEntries.map(([score]) =>
+              ScoreBgColorMap.get(score),
+            ),
+            borderColor: sortedEntries.map(([score]) =>
+              ScoreBorderColorMap.get(score),
             ),
             borderWidth: 2,
             data: sortedEntries.map(([_, count]) => count),

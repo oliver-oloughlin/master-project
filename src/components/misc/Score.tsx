@@ -1,4 +1,4 @@
-import { ScoreMap } from "#/utils/score"
+import { ScoreTextMap, ScoreBgColorMap, ScoreEmojiMap } from "#/utils/score"
 import { twMerge } from "tailwind-merge"
 
 export type ScoreProps = {
@@ -6,24 +6,17 @@ export type ScoreProps = {
   className?: string
 }
 
-export default function Score({ children, className }: ScoreProps) {
+export default function Score({ children: score, className }: ScoreProps) {
   return (
-    <p
+    <span
       className={twMerge(
-        "px-4 py-2 rounded-full w-fit",
-        children > 4
-          ? "bg-emerald-100"
-          : children > 3
-            ? "bg-lime-100"
-            : children > 2
-              ? "bg-yellow-100"
-              : children > 1
-                ? "bg-orange-100"
-                : "bg-red-100",
+        "px-4 py-2 rounded-full w-fit flex gap-2 items-center",
+        `bg-[${ScoreBgColorMap.get(score)}]`,
         className,
       )}
     >
-      {ScoreMap.get(children)}
-    </p>
+      <p>{ScoreTextMap.get(score)}</p>
+      <p className="text-2xl">{ScoreEmojiMap.get(score)}</p>
+    </span>
   )
 }
