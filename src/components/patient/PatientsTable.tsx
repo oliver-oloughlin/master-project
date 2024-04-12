@@ -27,6 +27,7 @@ import { Skeleton } from "../ui/skeleton"
 import Triangle from "../misc/Triangle"
 import AddPatientDialog from "./AddPatientDialog"
 import SearchBox from "../misc/SearchBox"
+import RequestFeedbackDialog from "./RequestFeedbackDialog"
 
 type PatientVisitState = "previous" | "present" | "arriving"
 type OrderBy = "id" | "name" | "arrival" | "group"
@@ -184,7 +185,10 @@ export default function PatientsTable({
           Kommende
         </Button>
       </span>
-      <AddPatientDialog groupId={groupId} />
+      <span className="flex gap-4">
+        <AddPatientDialog groupId={groupId} />
+        <RequestFeedbackDialog patients={patients} />
+      </span>
       <SearchBox
         placeholder="Søk etter pasient..."
         items={mappedPatients}

@@ -7,7 +7,7 @@ import type { AdfectusPatient } from "../../adfectus/patient.ts"
 import { ScoreTextMap } from "#/utils/score.tsx"
 import { DEFAULT_PATIENT_STAY_DURATION_DAYS } from "#/utils/constants.ts"
 
-const activities = [
+export const mockActivities = [
   "Basseng",
   "Ri på hest",
   "Klatring",
@@ -53,7 +53,7 @@ export function mockAdfectusRatings(patient: AdfectusPatient) {
   for (const status of statuses) {
     const n = status === "during" ? 3 : 1
     for (let i = 0; i < n; i++) {
-      const scores: AdfectusScore[] = activities.map((activity) => ({
+      const scores: AdfectusScore[] = mockActivities.map((activity) => ({
         activity,
         score: scoreValues[Math.floor(Math.random() * scoreValues.length)],
       }))
