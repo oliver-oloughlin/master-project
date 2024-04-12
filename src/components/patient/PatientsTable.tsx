@@ -27,7 +27,7 @@ import { Skeleton } from "../ui/skeleton"
 import Triangle from "../misc/Triangle"
 import AddPatientDialog from "./AddPatientDialog"
 import SearchBox from "../misc/SearchBox"
-import RequestFeedbackDialog from "./RequestFeedbackDialog"
+import RequestFeedbackDialog from "../ratings/RequestFeedbackDialog"
 
 type PatientVisitState = "previous" | "present" | "arriving"
 type OrderBy = "id" | "name" | "arrival" | "group"

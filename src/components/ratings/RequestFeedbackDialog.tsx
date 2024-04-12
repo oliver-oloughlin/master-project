@@ -6,14 +6,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog"
+import RequestFeedbackForm from "./RequestFeedbackForm"
 
 export type RequestFeedbackDialogProps = {
   patients: ViewPatient[]
 }
 
 export default function RequestFeedbackDialog({
-  // TODO: use prop
-  patients: _,
+  patients,
 }: RequestFeedbackDialogProps) {
   return (
     <Dialog>
@@ -24,7 +24,7 @@ export default function RequestFeedbackDialog({
         <DialogHeader>
           <DialogTitle>Be om tilbakemelding</DialogTitle>
         </DialogHeader>
-        {/* TODO: Add content */}
+        <RequestFeedbackForm patients={patients} />
       </DialogContent>
     </Dialog>
   )
