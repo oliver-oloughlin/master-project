@@ -8,14 +8,14 @@ import {
   SelectValue,
 } from "../ui/select"
 import type { ViewPatient } from "#/models/view/patient"
+import SelectPatientsTable from "../patient/SelectPatientsTable"
 
 export type RequestFeedbackFormProps = {
   patients: ViewPatient[]
 }
 
 export default function RequestFeedbackForm({
-  // TODO: use props
-  patients: _,
+  patients,
 }: RequestFeedbackFormProps) {
   const { activities, loading, error } = useActivities()
   const [activity, setActivity] = useState<string | null>(null)
@@ -43,7 +43,15 @@ export default function RequestFeedbackForm({
         </SelectContent>
       </Select>
       <br />
-      {activity && <>Pasienter...</>}
+      {activity && (
+        <>
+          <SelectPatientsTable
+            className="h-80"
+            patients={patients}
+            onSelect={() => {}}
+          />
+        </>
+      )}
     </div>
   )
 }

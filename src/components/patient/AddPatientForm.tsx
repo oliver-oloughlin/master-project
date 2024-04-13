@@ -1,5 +1,5 @@
 import { useGroupIds } from "#/hooks/useGroupIds"
-import { formatDateInputValue, formatDisplayDate } from "#/utils/formatters"
+import { formatDateInputValue } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -12,23 +12,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { Button } from "../ui/button"
 import { useMemo, useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 import { useExternalPatients } from "#/hooks/useExternalPatients"
-import SearchBox from "../misc/SearchBox"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table"
 import { fromExternalPatientToViewPatient } from "#/mappers/patients"
 import { Switch } from "../ui/switch"
 import { Season } from "#/models/shared/season"
 import AdfetcusButton from "../misc/AdfectusButton"
+import SelectPatientsTable from "./SelectPatientsTable"
 
 export type AddPatientFormProps = {
   groupId?: string
@@ -44,15 +35,8 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   )
 
   const mappedExternalPatients = useMemo(() => {
-    return externalPatients.map((p) => ({
-      ...fromExternalPatientToViewPatient(p, []),
-      displayArrivalDate: formatDisplayDate(p.arrivalDate),
-    }))
+    return externalPatients.map((p) => fromExternalPatientToViewPatient(p, []))
   }, [externalPatients])
-
-  const [searchedExternalPatients, setSearchedExternalPatients] = useState(
-    mappedExternalPatients,
-  )
 
   // Create form schema
   const AddPatientSchema = z.object({
@@ -109,62 +93,15 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
 
   return (
     <div className="grid gap-4 min-w-fit">
-      <div className="grid gap-1 min-w-fit">
-        <SearchBox
-          items={mappedExternalPatients}
-          searchKeys={[
-            {
-              key: "patientId",
-              label: "Pasient ID",
-            },
-            {
-              key: "firstName",
-              label: "Fornavn",
-            },
-            {
-              key: "groupId",
-              label: "Gruppe",
-            },
-            {
-              key: "displayArrivalDate",
-              label: "Ankomst",
-            },
-          ]}
-          defaultSearchKey="firstName"
-          placeholder="Søk etter pasient..."
-          onInput={setSearchedExternalPatients}
-        />
-        <div className="overflow-y-auto h-80 min-w-fit">
-          {externalPatients.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>PasientID</TableHead>
-                  <TableHead>Fornavn</TableHead>
-                  <TableHead>Ankomst</TableHead>
-                  <TableHead>Gruppe</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {searchedExternalPatients.map((ep) => (
-                  <TableRow key={ep.patientId}>
-                    <TableCell>{ep.patientId}</TableCell>
-                    <TableCell>{ep.firstName}</TableCell>
-                    <TableCell>{formatDisplayDate(ep.arrivalDate)}</TableCell>
-                    <TableCell>{ep.groupId}</TableCell>
-                    <TableCell>
-                      <Button onPointerDown={() => setExternalPatient(ep)}>
-                        Velg
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <p>Kunne ikke laste inn eksterne pasienter</p>
-          )}
-        </div>
+      <div className="overflow-y-auto h-80 min-w-fit p-2">
+        {externalPatients.length > 0 ? (
+          <SelectPatientsTable
+            patients={mappedExternalPatients}
+            onSelect={setExternalPatient}
+          />
+        ) : (
+          <p>Kunne ikke laste inn eksterne pasienter</p>
+        )}
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
