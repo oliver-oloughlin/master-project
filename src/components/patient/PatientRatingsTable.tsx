@@ -32,8 +32,8 @@ export default function PatientRatingsTable({
     <>
       {rating ? (
         <div className="grid gap-2">
-          <p className="text-slate-500">
-            {formatDisplayDate(rating.timestamp)}
+          <p className="text-slate-500 italic">
+            Dato: {formatDisplayDate(rating.timestamp)}
           </p>
           <Table>
             <TableHeader>

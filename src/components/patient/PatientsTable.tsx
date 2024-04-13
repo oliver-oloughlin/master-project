@@ -27,10 +27,10 @@ import { Skeleton } from "../ui/skeleton"
 import Triangle from "../misc/Triangle"
 import AddPatientDialog from "./AddPatientDialog"
 import SearchBox from "../misc/SearchBox"
+import RequestFeedbackDialog from "../ratings/RequestFeedbackDialog"
+import { useSorted } from "#/hooks/useSorted"
 
 type PatientVisitState = "previous" | "present" | "arriving"
-type OrderBy = "id" | "name" | "arrival" | "group"
-type Order = "asc" | "desc"
 
 const PAGE_SIZE = 10
 
@@ -60,18 +60,7 @@ export default function PatientsTable({
 
   const [view, setView] = useState<PatientVisitState>("present")
   const [page, setPage] = useState(1)
-  const [orderBy, setOrderBy] = useState<OrderBy>("name")
-  const [order, setOrder] = useState<Order>("asc")
   const [searchedPatients, setSearchedPatients] = useState(mappedPatients)
-
-  // Order by selector
-  function selectOrderBy(newOrderBy: OrderBy) {
-    if (orderBy === newOrderBy) {
-      setOrder((o) => (o === "asc" ? "desc" : "asc"))
-    } else {
-      setOrderBy(newOrderBy)
-    }
-  }
 
   // View selector
   function selectView(view: PatientVisitState) {
@@ -91,48 +80,35 @@ export default function PatientsTable({
   const viewPatients = useMemo(() => {
     return searchedPatients.filter((patient) => {
       const arrivalDate = new Date(patient.arrivalDate).valueOf()
+
       const departureDate = patient.departureDate
         ? new Date(patient.departureDate).valueOf()
         : arrivalDate + 21 * 24 * 60 * 60 * 1000
+
       const now = Date.now()
+
       const patientVisitState: PatientVisitState =
         now < arrivalDate
           ? "arriving"
           : now > departureDate
             ? "previous"
             : "present"
+
       return view === patientVisitState
     })
   }, [searchedPatients, view])
 
-  // Sort patients by name
-  const sortedPatients = useMemo(() => {
-    return viewPatients.sort((p1, p2) => {
-      let val1: string
-      let val2: string
-
-      if (orderBy === "arrival") {
-        val1 = p1.arrivalDate.valueOf()
-        val2 = p2.arrivalDate.valueOf()
-      } else if (orderBy === "group") {
-        val1 = p1.groupId
-        val2 = p2.groupId
-      } else if (orderBy === "id") {
-        val1 = p1.patientId
-        val2 = p2.patientId
-      } else {
-        val1 = p1.firstName
-        val2 = p2.firstName
-      }
-
-      const comp = val1.toLowerCase().localeCompare(val2.toLowerCase())
-      return order === "asc" ? comp : -comp
-    })
-  }, [viewPatients, order, orderBy])
+  // Sorted patients
+  const { sorted, setSortBy, sortBy, order } = useSorted(viewPatients, [
+    "firstName",
+    "patientId",
+    "arrivalDate",
+    "groupId",
+  ])
 
   const start = PAGE_SIZE * (page - 1)
   const end = start + PAGE_SIZE
-  const patientsPage = sortedPatients.slice(start, end)
+  const patientsPage = sorted.slice(start, end)
 
   // Return skeleton if loading
   if (loading) {
@@ -184,7 +160,10 @@ export default function PatientsTable({
           Kommende
         </Button>
       </span>
-      <AddPatientDialog groupId={groupId} />
+      <span className="flex gap-4">
+        <AddPatientDialog groupId={groupId} />
+        <RequestFeedbackDialog patients={patients} />
+      </span>
       <SearchBox
         placeholder="Søk etter pasient..."
         items={mappedPatients}
@@ -214,11 +193,11 @@ export default function PatientsTable({
           <TableRow className="!bg-white">
             <TableHead
               className="min-w-32 cursor-pointer hover:text-slate-800"
-              onPointerDown={() => selectOrderBy("id")}
+              onPointerDown={() => setSortBy("patientId")}
             >
               <span className="flex gap-1 items-center">
                 PasientID
-                {orderBy === "id" && (
+                {sortBy === "patientId" && (
                   <Triangle
                     oriantation={order === "asc" ? "up" : "down"}
                     className="border-8"
@@ -228,11 +207,11 @@ export default function PatientsTable({
             </TableHead>
             <TableHead
               className="min-w-32 cursor-pointer hover:text-slate-800"
-              onPointerDown={() => selectOrderBy("name")}
+              onPointerDown={() => setSortBy("firstName")}
             >
               <span className="flex gap-1 items-center">
                 Fornavn
-                {orderBy === "name" && (
+                {sortBy === "firstName" && (
                   <Triangle
                     oriantation={order === "asc" ? "up" : "down"}
                     className="border-8"
@@ -242,11 +221,11 @@ export default function PatientsTable({
             </TableHead>
             <TableHead
               className="min-w-32 cursor-pointer hover:text-slate-800"
-              onPointerDown={() => selectOrderBy("arrival")}
+              onPointerDown={() => setSortBy("arrivalDate")}
             >
               <span className="flex gap-1 items-center">
                 Ankomst
-                {orderBy === "arrival" && (
+                {sortBy === "arrivalDate" && (
                   <Triangle
                     oriantation={order === "asc" ? "up" : "down"}
                     className="border-8"
@@ -256,11 +235,11 @@ export default function PatientsTable({
             </TableHead>
             <TableHead
               className="min-w-32 cursor-pointer hover:text-slate-800"
-              onPointerDown={() => selectOrderBy("group")}
+              onPointerDown={() => setSortBy("groupId")}
             >
               <span className="flex gap-1 items-center">
                 Gruppe
-                {orderBy === "group" && (
+                {sortBy === "groupId" && (
                   <Triangle
                     oriantation={order === "asc" ? "up" : "down"}
                     className="border-8"
@@ -296,7 +275,7 @@ export default function PatientsTable({
       </Table>
       <PaginationBar
         page={page}
-        totalItems={sortedPatients.length}
+        totalItems={sorted.length}
         pageSize={PAGE_SIZE}
         setPage={setPage}
       />

@@ -1,6 +1,9 @@
 import { fromAdfectusRatingToViewRating } from "#/mappers/ratings"
 import { mockAdfectusPatients } from "#/models/adfectus/mocks/patients"
-import { mockAdfectusRatings } from "#/models/adfectus/mocks/ratings"
+import {
+  mockActivities,
+  mockAdfectusRatings,
+} from "#/models/adfectus/mocks/ratings"
 import { ViewRating } from "#/models/view/rating"
 import { sleep } from "#/utils/sleep"
 
@@ -15,4 +18,9 @@ export async function getRatingsByPatientId(id: string): Promise<ViewRating[]> {
 
   const ratings = mockAdfectusRatings(patient)
   return ratings.map(fromAdfectusRatingToViewRating)
+}
+
+export async function getActivities(): Promise<string[]> {
+  await sleep(100)
+  return mockActivities
 }
