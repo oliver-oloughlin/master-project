@@ -24,12 +24,14 @@ type PatientLike = {
 export type SelectPatientsTableProps<T extends PatientLike> = {
   patients: T[]
   onSelect: (patient: T) => unknown
+  selectLabel: string
   className?: string
 }
 
 export default function SelectPatientsTable<T extends PatientLike>({
   patients,
   onSelect,
+  selectLabel,
   className,
 }: SelectPatientsTableProps<T>) {
   const mappedPatients = useMemo(() => {
@@ -143,7 +145,7 @@ export default function SelectPatientsTable<T extends PatientLike>({
               <TableCell>{formatDisplayDate(p.arrivalDate)}</TableCell>
               <TableCell>{p.groupId}</TableCell>
               <TableCell>
-                <Button onPointerDown={() => onSelect(p)}>Velg</Button>
+                <Button onPointerDown={() => onSelect(p)}>{selectLabel}</Button>
               </TableCell>
             </TableRow>
           ))}

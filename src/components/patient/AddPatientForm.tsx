@@ -96,6 +96,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
       <div className="overflow-y-auto h-80 min-w-fit p-2">
         {externalPatients.length > 0 ? (
           <SelectPatientsTable
+            selectLabel="Velg"
             patients={mappedExternalPatients}
             onSelect={setExternalPatient}
           />
