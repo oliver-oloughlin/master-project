@@ -147,7 +147,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent data-content>
-                      {groupIds.map((groupId) => (
+                      {groupIds.sort().map((groupId) => (
                         <SelectItem key={groupId} value={groupId}>
                           {groupId}
                         </SelectItem>

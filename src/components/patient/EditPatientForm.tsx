@@ -112,7 +112,7 @@ export default function EditPatientForm({ patient }: EditPatientFormProps) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {groupIds.map((groupId) => (
+                    {groupIds.sort().map((groupId) => (
                       <SelectItem key={groupId} value={groupId}>
                         {groupId}
                       </SelectItem>

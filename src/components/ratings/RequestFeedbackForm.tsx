@@ -55,7 +55,7 @@ export default function RequestFeedbackForm({
             <SelectValue placeholder="velg en aktivitet..." />
           </SelectTrigger>
           <SelectContent>
-            {activities.map((activity) => (
+            {activities.sort().map((activity) => (
               <SelectItem key={activity} value={activity}>
                 {activity}
               </SelectItem>
