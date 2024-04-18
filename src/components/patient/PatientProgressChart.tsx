@@ -5,7 +5,7 @@ import {
   scoresByActivity,
 } from "#/utils/patients"
 import { ScoreTextMap } from "#/utils/score"
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { useGroup } from "#/hooks/useGroup"
 import { Skeleton } from "../ui/skeleton"
 import Repeat from "../misc/Repeat"
@@ -27,6 +27,8 @@ export default function PatientProgressChart({
   const activities = Array.from(activityScores.keys())
   const [activity, setActivity] = useState(activities.at(0) ?? "")
   const [showGroupAvg, setShowGorupAvg] = useState(false)
+  const [showGroupAvgInfo, setShowGorupAvgInfo] = useState(false)
+  const groupAvgInfoRef = useRef<HTMLParagraphElement>(null)
 
   const groupAverageDataset = useMemo(() => {
     const groupRatings = group?.patients.map((p) => p.ratings).flat()
@@ -121,59 +123,84 @@ export default function PatientProgressChart({
   }
 
   return (
-    <Line
-      data={{
-        datasets,
-      }}
-      options={{
-        responsive: true,
-        scales: {
-          x: {
-            type: "time",
-            grid: {
-              display: false,
-            },
-            time: {
-              displayFormats: {
-                day: "dd/MM/yyyy",
+    <>
+      {showGroupAvgInfo && (
+        <p
+          ref={groupAvgInfoRef}
+          className="absolute w-[30ch] bg-white shadow-md border-[0.05rem] border-slate-200 p-2 rounded-md -translate-y-full"
+        >
+          Gruppens gjennomsnittlige svar på aktiviteten. Beregnet basert på hele
+          gruppens svar på aktiviteten, ut ifra et syv dagers vindu for hvert av
+          pasientes svar.
+        </p>
+      )}
+      <Line
+        data={{
+          datasets,
+        }}
+        options={{
+          responsive: true,
+          scales: {
+            x: {
+              type: "time",
+              grid: {
+                display: false,
+              },
+              time: {
+                displayFormats: {
+                  day: "dd/MM/yyyy",
+                },
+              },
+              border: {
+                display: false,
+              },
+              ticks: {
+                autoSkipPadding: 64,
+                maxTicksLimit: patient.ratings.length,
               },
             },
-            border: {
+            y: {
+              offset: true,
+              ticks: {
+                stepSize: 1,
+                callback: (value) =>
+                  ScoreTextMap.get(Number(value)) ?? "Ukjent",
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+                boxHeight: 20,
+                boxWidth: 20,
+                sort: (a, b) =>
+                  a.text === GROUP_LABEL ? -1 : a.text.localeCompare(b.text),
+              },
+              onClick: (_, { text }) => {
+                text === GROUP_LABEL
+                  ? setShowGorupAvg((v) => !v)
+                  : setActivity(text)
+              },
+              onHover: (e, { text }) => {
+                if (text === GROUP_LABEL) {
+                  setShowGorupAvgInfo(true)
+                  const style = groupAvgInfoRef.current?.style
+                  if (style) {
+                    console.log(`${e.x} ${e.y}`)
+                    style.left = `${e.x}`
+                    style.top = `${e.y}`
+                  }
+                }
+              },
+              onLeave: () => setShowGorupAvgInfo(false),
+            },
+            datalabels: {
               display: false,
             },
-            ticks: {
-              autoSkipPadding: 64,
-              maxTicksLimit: patient.ratings.length,
-            },
           },
-          y: {
-            offset: true,
-            ticks: {
-              stepSize: 1,
-              callback: (value) => ScoreTextMap.get(Number(value)) ?? "Ukjent",
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            labels: {
-              usePointStyle: true,
-              boxHeight: 20,
-              boxWidth: 20,
-              sort: (a, b) =>
-                a.text === GROUP_LABEL ? -1 : a.text.localeCompare(b.text),
-            },
-            onClick: (_, { text }) => {
-              text === GROUP_LABEL
-                ? setShowGorupAvg((v) => !v)
-                : setActivity(text)
-            },
-          },
-          datalabels: {
-            display: false,
-          },
-        },
-      }}
-    />
+        }}
+      />
+    </>
   )
 }
