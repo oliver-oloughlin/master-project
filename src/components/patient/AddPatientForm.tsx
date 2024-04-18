@@ -92,8 +92,8 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   }
 
   return (
-    <div className="grid gap-4 min-w-fit">
-      <div className="overflow-y-auto h-80 min-w-fit p-2">
+    <div className="flex flex-col gap-4">
+      <div className="overflow-y-auto h-80 p-2">
         {externalPatients.length > 0 ? (
           <SelectPatientsTable
             selectLabel="Velg"
