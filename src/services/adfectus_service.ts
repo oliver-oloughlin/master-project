@@ -1,18 +1,18 @@
-import type { ViewGroup } from "#/models/view/group"
-import type { ViewPatient } from "#/models/view/patient"
-import type { ViewRating } from "#/models/view/rating"
+import type { Group } from "#/models/group"
+import type { Patient } from "#/models/patient"
+import type { Rating } from "#/models/rating"
 import { MockAdfectusService } from "./mock_adfectus_service"
 
 export type IAdfectusService = {
   getGroupIds(): Promise<string[]>
-  getGroupById(id: string): Promise<ViewGroup | null>
-  getRatingsByPatientId(id: string): Promise<ViewRating[]>
+  getGroupById(id: string): Promise<Group | null>
+  getRatingsByPatientId(id: string): Promise<Rating[]>
   getActivities(): Promise<string[]>
-  updatePatientById(id: string, patient: ViewPatient): Promise<boolean>
-  getPatientById(id: string): Promise<ViewPatient | null>
-  getPatients(): Promise<ViewPatient[]>
-  getPatientsByGroupId(groupId: string): Promise<ViewPatient[]>
-  addPatient(patient: ViewPatient): Promise<boolean>
+  updatePatientById(id: string, patient: Patient): Promise<boolean>
+  getPatientById(id: string): Promise<Patient | null>
+  getPatients(): Promise<Patient[]>
+  getPatientsByGroupId(groupId: string): Promise<Patient[]>
+  addPatient(patient: Patient): Promise<boolean>
 }
 
 export const AdfectusService: IAdfectusService = new MockAdfectusService()

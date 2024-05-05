@@ -1,4 +1,4 @@
-import { ViewPatient } from "#/models/view/patient"
+import { Patient } from "#/models/patient"
 import { useMemo, useState } from "react"
 import { Button } from "../ui/button"
 import {
@@ -18,7 +18,7 @@ import Score from "../misc/Score"
 import GroupActivityScoreDistributionDialog from "./GroupActivityScoreDistributionDialog"
 
 export type GroupRatingsTableProps = {
-  patients: ViewPatient[]
+  patients: Patient[]
 }
 
 export default function GroupRatingsTable({

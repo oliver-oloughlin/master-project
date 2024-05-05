@@ -1,9 +1,9 @@
-import { ViewPatient } from "#/models/view/patient"
+import { Patient } from "#/models/patient"
 import PatientProgressChart from "./PatientProgressChart"
 import PatientRatingsTable from "./PatientRatingsTable"
 
 export type PatientViewProps = {
-  patient: ViewPatient
+  patient: Patient
 }
 
 export default function PatientView({ patient }: PatientViewProps) {
