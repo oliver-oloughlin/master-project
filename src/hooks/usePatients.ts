@@ -1,13 +1,8 @@
 import { createLoaderStore } from "#/utils/zustand"
-import {
-  getPatients,
-  getPatientById,
-  updatePatientById,
-  addPatient as _addPatient,
-} from "#/services/patients"
+import { AdfectusService } from "#/services/adfectus_service"
 import type { ViewPatient } from "#/models/view/patient"
 
-const store = createLoaderStore(getPatients)
+const store = createLoaderStore(() => AdfectusService.getPatients())
 
 export const usePatients = () => {
   const { data, loading, error, init, mutate } = store()
@@ -30,13 +25,13 @@ export const usePatients = () => {
    * @returns
    */
   async function updatePatient(patientId: string, data: ViewPatient) {
-    const success = await updatePatientById(patientId, data)
+    const success = await AdfectusService.updatePatientById(patientId, data)
 
     if (!success) {
       return success
     }
 
-    const newPatient = await getPatientById(data.patientId)
+    const newPatient = await AdfectusService.getPatientById(data.patientId)
     if (!newPatient) {
       return success
     }
@@ -60,7 +55,7 @@ export const usePatients = () => {
    * @returns
    */
   async function addPatient(patient: ViewPatient) {
-    const success = await _addPatient(patient)
+    const success = await AdfectusService.addPatient(patient)
     if (success) {
       mutate((data) =>
         data.some((p) => p.patientId === patient.patientId)

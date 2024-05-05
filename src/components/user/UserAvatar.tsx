@@ -3,7 +3,6 @@ import { useExternalUser } from "#/hooks/useExternalUser"
 
 export default function UserAvatar() {
   const { externalUser } = useExternalUser()
-
   return (
     <Avatar>
       <AvatarImage />

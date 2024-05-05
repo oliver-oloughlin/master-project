@@ -1,7 +1,9 @@
-import { getGroupById } from "#/services/groups"
+import { AdfectusService } from "#/services/adfectus_service"
 import { createLoaderStore } from "#/utils/zustand"
 
-const store = createLoaderStore(getGroupById)
+const store = createLoaderStore((groupId: string) =>
+  AdfectusService.getGroupById(groupId),
+)
 
 export const useGroup = (groupId: string) => {
   const { data, loading, error, init } = store()

@@ -1,7 +1,7 @@
 import { createLoaderStore } from "#/utils/zustand"
-import { getActivities } from "#/services/ratings"
+import { AdfectusService } from "#/services/adfectus_service"
 
-const store = createLoaderStore(getActivities)
+const store = createLoaderStore(AdfectusService.getActivities)
 
 export const useActivities = () => {
   const { data, loading, error, init } = store()
