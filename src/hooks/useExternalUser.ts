@@ -1,5 +1,5 @@
 import { createLoaderStore } from "#/utils/zustand"
-import { ExternalService } from "#/services/external_service"
+import { ExternalService } from "#/services"
 
 const store = createLoaderStore(ExternalService.getUser)
 

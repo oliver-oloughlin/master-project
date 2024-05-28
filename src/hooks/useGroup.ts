@@ -1,4 +1,4 @@
-import { AdfectusService } from "#/services/adfectus_service"
+import { AdfectusService } from "#/services"
 import { createLoaderStore } from "#/utils/zustand"
 
 const store = createLoaderStore((groupId: string) =>

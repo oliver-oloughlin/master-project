@@ -1,4 +1,4 @@
-import { ExternalService } from "#/services/external_service"
+import { ExternalService } from "#/services"
 import { createLoaderStore } from "#/utils/zustand"
 
 const store = createLoaderStore(ExternalService.getPatients)

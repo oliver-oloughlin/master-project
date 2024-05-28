@@ -1,5 +1,5 @@
 import { createLoaderStore } from "#/utils/zustand"
-import { AdfectusService } from "#/services/adfectus_service"
+import { AdfectusService } from "#/services"
 
 const store = createLoaderStore(AdfectusService.getGroupIds)
 

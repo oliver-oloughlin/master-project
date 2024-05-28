@@ -1,7 +1,6 @@
 import type { Group } from "#/models/group"
 import type { Patient } from "#/models/patient"
 import type { Rating } from "#/models/rating"
-import { MockAdfectusService } from "./mock_adfectus_service"
 
 export type IAdfectusService = {
   getGroupIds(): Promise<string[]>
@@ -14,5 +13,3 @@ export type IAdfectusService = {
   getPatientsByGroupId(groupId: string): Promise<Patient[]>
   addPatient(patient: Patient): Promise<boolean>
 }
-
-export const AdfectusService: IAdfectusService = new MockAdfectusService()
