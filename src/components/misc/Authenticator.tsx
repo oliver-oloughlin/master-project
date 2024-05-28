@@ -18,7 +18,6 @@ export default function OuterAuthenticator({
   children?: React.ReactNode
 }) {
   const { externalUser } = useExternalUser()
-
   return (
     <Authenticator
       className="h-screen grid place-items-center"

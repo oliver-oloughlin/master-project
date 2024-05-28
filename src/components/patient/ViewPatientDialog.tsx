@@ -1,4 +1,4 @@
-import { ViewPatient } from "#/models/view/patient"
+import { Patient } from "#/models/patient"
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import PatientView from "./PatientView"
 import { ADFECTUS_BTN_CLASS } from "../misc/AdfectusButton"
 
 export type EditPatientDialogProps = {
-  patient: ViewPatient
+  patient: Patient
 }
 
 export default function ViewPatientDialog({ patient }: EditPatientDialogProps) {

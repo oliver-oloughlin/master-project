@@ -1,4 +1,4 @@
-import { ViewPatient } from "#/models/view/patient"
+import { Patient } from "#/models/patient"
 import Line from "#/components/charts/Line"
 import {
   dailyAverageScoresByWeeklyWindow,
@@ -11,7 +11,7 @@ import { Skeleton } from "../ui/skeleton"
 import Repeat from "../misc/Repeat"
 
 export type PatientsProgressChartProps = {
-  patient: ViewPatient
+  patient: Patient
 }
 
 const GROUP_LABEL = "Gruppe Gjennomsnitt"

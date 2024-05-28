@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import type { ViewPatient } from "#/models/view/patient"
+import type { Patient } from "#/models/patient"
 import SelectPatientsTable from "../patient/SelectPatientsTable"
 import { Label } from "../ui/label"
 import { Table, TableBody, TableCell, TableRow } from "../ui/table"
@@ -16,7 +16,7 @@ import { Button } from "../ui/button"
 import AdfetcusButton from "../misc/AdfectusButton"
 
 export type RequestFeedbackFormProps = {
-  patients: ViewPatient[]
+  patients: Patient[]
 }
 
 export default function RequestFeedbackForm({
@@ -24,7 +24,7 @@ export default function RequestFeedbackForm({
 }: RequestFeedbackFormProps) {
   const { activities, loading, error } = useActivities()
   const [activity, setActivity] = useState<string | null>(null)
-  const [selectedPatients, setSelectedPatients] = useState<ViewPatient[]>([])
+  const [selectedPatients, setSelectedPatients] = useState<Patient[]>([])
 
   const unselectedPatients = useMemo(() => {
     return patients.filter(
@@ -40,7 +40,7 @@ export default function RequestFeedbackForm({
     return <>Kunne ikke laste inn aktiviteter</>
   }
 
-  function removeSelectedPatient(patientId: ViewPatient["patientId"]) {
+  function removeSelectedPatient(patientId: Patient["patientId"]) {
     setSelectedPatients((patients) =>
       patients.filter((p) => p.patientId !== patientId),
     )

@@ -1,7 +1,7 @@
 import { createLoaderStore } from "#/utils/zustand"
-import { getExternalUser } from "#/services/users"
+import { ExternalService } from "#/services"
 
-const store = createLoaderStore(getExternalUser)
+const store = createLoaderStore(ExternalService.getUser)
 
 export const useExternalUser = () => {
   const { data, loading, error, init } = store()

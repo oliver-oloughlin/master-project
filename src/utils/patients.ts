@@ -1,5 +1,5 @@
-import type { ViewPatient } from "#/models/view/patient"
-import type { ViewRating } from "#/models/view/rating"
+import type { Patient } from "#/models/patient"
+import type { Rating } from "#/models/rating"
 
 export type ScoreTimestamp = {
   score: number
@@ -10,9 +10,9 @@ export type ActivityRatingMap = Map<string, ScoreTimestamp[]>
 
 export type PatientStatus = "arriving" | "present" | "departed"
 
-export type RatingData = Pick<ViewRating, "scores" | "timestamp">
+export type RatingData = Pick<Rating, "scores" | "timestamp">
 
-export function patientStatus(patient: ViewPatient): PatientStatus {
+export function patientStatus(patient: Patient): PatientStatus {
   const arrival = new Date(patient.arrivalDate).valueOf()
   const departure = patient.departureDate
     ? new Date(patient.departureDate).valueOf()

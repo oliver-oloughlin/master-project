@@ -1,4 +1,4 @@
-import { ViewPatient } from "#/models/view/patient"
+import type { Patient } from "#/models/patient"
 import {
   Dialog,
   DialogContent,
@@ -10,7 +10,7 @@ import {
 import EditPatientForm from "./EditPatientForm"
 
 export type EditPatientDialogProps = {
-  patient: ViewPatient
+  patient: Patient
 }
 
 export default function EditPatientDialog({ patient }: EditPatientDialogProps) {

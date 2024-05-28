@@ -12,12 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 import { useExternalPatients } from "#/hooks/useExternalPatients"
-import { fromExternalPatientToViewPatient } from "#/mappers/patients"
 import { Switch } from "../ui/switch"
-import { Season } from "#/models/shared/season"
+import { Season } from "#/models/season"
 import AdfetcusButton from "../misc/AdfectusButton"
 import SelectPatientsTable from "./SelectPatientsTable"
 
@@ -33,10 +32,6 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   const [saveState, setSaveState] = useState<"unsaved" | "saved" | "error">(
     "unsaved",
   )
-
-  const mappedExternalPatients = useMemo(() => {
-    return externalPatients.map((p) => fromExternalPatientToViewPatient(p, []))
-  }, [externalPatients])
 
   // Create form schema
   const AddPatientSchema = z.object({
@@ -58,7 +53,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
   })
 
   // Set form valeus when selecting external patient
-  function setExternalPatient(patient: (typeof mappedExternalPatients)[0]) {
+  function setExternalPatient(patient: (typeof externalPatients)[0]) {
     form.setValue("patientId", patient.patientId)
     form.setValue("firstName", patient.firstName)
     form.setValue("arrivalDate", formatDateInputValue(patient.arrivalDate))
@@ -97,7 +92,7 @@ export default function AddPatientForm({ groupId }: AddPatientFormProps) {
         {externalPatients.length > 0 ? (
           <SelectPatientsTable
             selectLabel="Velg"
-            patients={mappedExternalPatients}
+            patients={externalPatients}
             onSelect={setExternalPatient}
           />
         ) : (

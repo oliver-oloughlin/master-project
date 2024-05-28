@@ -1,4 +1,4 @@
-import type { ViewPatient } from "#/models/view/patient"
+import type { Patient } from "#/models/patient"
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,7 @@ import {
 import RequestFeedbackForm from "./RequestFeedbackForm"
 
 export type RequestFeedbackDialogProps = {
-  patients: ViewPatient[]
+  patients: Patient[]
 }
 
 export default function RequestFeedbackDialog({

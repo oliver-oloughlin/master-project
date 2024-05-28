@@ -1,4 +1,4 @@
-import type { ViewPatient } from "#/models/view/patient"
+import type { Patient } from "#/models/patient"
 import { useGroupIds } from "#/hooks/useGroupIds"
 import { formatDateInputValue } from "#/utils/formatters"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,11 +16,11 @@ import {
 import { useState } from "react"
 import { usePatients } from "#/hooks/usePatients"
 import { Switch } from "../ui/switch"
-import { Season } from "#/models/shared/season"
+import { Season } from "#/models/season"
 import AdfetcusButton from "../misc/AdfectusButton"
 
 export type EditPatientFormProps = {
-  patient: ViewPatient
+  patient: Patient
 }
 
 export default function EditPatientForm({ patient }: EditPatientFormProps) {
